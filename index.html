@@ -1,202 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Monitoring Smelter</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        /* Desain Dasar & Background Pattern */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            /* Pola titik-titik (dot pattern) seperti pada gambar */
-            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
-            background-size: 24px 24px;
-            color: #111827;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- HEADER --- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .header-logos {
-            display: flex;
-            gap: 15px;
-        }
-
-        /* Placeholder untuk logo bulat (Bisa diganti tag <img> nantinya) */
-        .logo-img {
-    height: 40px; /* Menyesuaikan tinggi logo agar sejajar dengan teks */
-    width: auto;  /* Lebar akan menyesuaikan proporsi gambar asli */
-    object-fit: contain; /* Memastikan logo tidak gepeng/distorsi */
-    border-radius: 50%; /* Opsional: Hapus baris ini jika logo Anda BUKAN lingkaran */
-        }
-
-        /* Teks Logo Tengah (Gradasi Biru-Cyan) */
-        .header-title {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 8px;
-            text-align: center;
-            /* Efek Gradasi Text */
-            background: linear-gradient(90deg, #1d4ed8, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-
-        /* Menu Hamburger */
-        .menu-icon {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-icon span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background-color: #374151;
-            border-radius: 2px;
-        }
-
-        /* --- HERO SECTION (Konten Utama) --- */
-        .hero {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Tipografi Judul */
-        .hero h1 {
-            font-size: 64px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
-        }
-        .text-blue { color: #1d4ed8; }
-        .text-green { color: #059669; }
-
-        /* Tipografi Deskripsi */
-        .hero p {
-            font-size: 18px;
-            color: #4b5563;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 700px;
-        }
-
-        /* --- BUTTONS --- */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 9999px; /* Bentuk Kapsul/Pill */
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Tombol Utama (Biru Solid) */
-        .btn-primary {
-            background-color: #1d4ed8;
-            color: white;
-            border: none;
-            box-shadow: 0 4px 6px rgba(29, 78, 216, 0.2);
-        }
-        .btn-primary:hover { background-color: #1e40af; }
-
-        /* Tombol Sekunder (Garis Tepi) */
-        .btn-outline {
-            background-color: #ffffff;
-            color: #374151;
-            border: 1px solid #d1d5db;
-        }
-        .btn-outline:hover {
-            background-color: #f9fafb;
-            border-color: #9ca3af;
-        }
-
-        /* Responsivitas untuk layar kecil */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 42px; }
-            .header-title { font-size: 24px; letter-spacing: 4px; }
-            .header-logos .logo-circle:nth-child(3) { display: none; } /* Sembunyikan 1 logo di HP */
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Bagian Header (Navigasi Atas) -->
-    <header class="header">
-        <div class="header-logos">
-            <!-- Ganti elemen ini dengan tag <img src="..."> dari logo perusahaan Anda -->
-            <img src="Lambang UGM.png" alt="Lambang" class="logo-img">
-            <img src="Logo POLIJE (Warna).png" alt="Logo" class="logo-img">
-        </div>
-        
-        <h2 class="header-title">SINERO</h2>
-        
-        <div class="menu-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </header>
-
-    <!-- Bagian Hero (Konten Utama di Tengah) -->
-    <main class="hero">
-        <h1>
-            Monitoring <span class="text-blue">TEG Output</span><br>
-            dan <span class="text-green">CEMS Filtrasi</span>
-        </h1>
-        
-        <p>
-            Platform pemantauan komprehensif secara real-time untuk konversi energi panas 
-            sisa menjadi listrik dan kepatuhan batas baku mutu emisi gas buang industri berat.
-        </p>
-
-        <div class="button-group">
-            <!-- Tombol ini bisa Anda arahkan link-nya ke file dashboard sebelumnya -->
-            <a href="dashboard-smelter.html" class="btn btn-primary">
-                Buka Simulassi <span>&rarr;</span>
-            </a>
-            <button class="btn btn-outline">Metodologi</button>
-            <a href="tentang-kami.html" class="btn btn-outline">Tentang Kami 
-            </a>
-            <a href="dashboard-nasional.html" class="btn btn-outline">Timeline 2045 
-            </a>
-        </div>
-    </main>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SINERO — Monitoring TEG Output &amp; CEMS Filtrasi Smelter 2045</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
