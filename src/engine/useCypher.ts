@@ -156,6 +156,50 @@ export function useCypher() {
     }, 600);
   }, [telemetry, playClick]);
 
+  // Operational presets
+  const applyPreset = useCallback(
+    (presetId: 'MAX_POWER' | 'ECO_COMPLIANCE' | 'LAB_BENCHMARK' | 'SURGE_PROTECT') => {
+      playClick();
+      switch (presetId) {
+        case 'MAX_POWER':
+          setCoolantRate(85);
+          setFlueHeatOffset(20);
+          setFilterActive(true);
+          setControlMode('AUTO_CLOSED_LOOP');
+          addLog('AI_CONTROLLER', 'SUCCESS', 'Preset Aktif: Pemanenan Daya Maksimal (ΔT dinaikkan, laju pendingin 85 L/min).');
+          break;
+        case 'ECO_COMPLIANCE':
+          setCoolantRate(55);
+          setFlueHeatOffset(0);
+          setFilterActive(true);
+          setControlMode('AUTO_CLOSED_LOOP');
+          addLog('AI_CONTROLLER', 'SUCCESS', 'Preset Aktif: Kepatuhan Net-Zero & Filtrasi Maksimal (Reduksi emisi diutamakan).');
+          break;
+        case 'LAB_BENCHMARK':
+          setUnitId('prototype-lab');
+          setCoolantRate(50);
+          setFlueHeatOffset(0);
+          setFilterActive(true);
+          setControlMode('EXPERIMENTAL_BENCH');
+          addLog('OPERATOR', 'INFO', 'Preset Aktif: Benchmark Uji Empiris Laboratorium UGM 2026 (Kondisi nominal).');
+          break;
+        case 'SURGE_PROTECT':
+          setCoolantRate(90);
+          setFlueHeatOffset(-15);
+          setFilterActive(true);
+          playAlarm();
+          addLog('AI_CONTROLLER', 'WARNING', 'Preset Aktif: Thermal Surge Protection (Aliran pendingin 100%, redam panas buang).');
+          break;
+      }
+    },
+    [playClick, playAlarm, addLog]
+  );
+
+  const clearLogs = useCallback(() => {
+    playClick();
+    setLogs([]);
+  }, [playClick]);
+
   return {
     unitId,
     setUnitId: (id: SmelterUnitId) => {
@@ -180,6 +224,8 @@ export function useCypher() {
     flueHeatOffset,
     setFlueHeatOffset,
     calibrateSensors,
+    applyPreset,
+    clearLogs,
     telemetry,
     powerWaveform,
     coWaveform,
@@ -345,15 +391,15 @@ function generateCopilotAnswer(prompt: string, state: ScadaSystemState): Copilot
   let content = '';
 
   if (p.includes('teg') || p.includes('seebeck') || p.includes('daya') || p.includes('regresi') || p.includes('panas')) {
-    content = `### Analisis Pemanenan Energi Termoelektrik (TEG)\n\nBerdasarkan data penelitian CYPHER 2026:\n- **Formula Regresi Empiris**: $P = 0.52 \\Delta T + 0.08$ dengan koefisien determinasi $R^2 = 0.94$.\n- **Hasil Uji Prototipe (TEC1-12706)**: Menghasilkan daya rata-rata **3.2 – 4.4 W** pada gradien suhu $\\Delta T$ sebesar **6.5 – 8.2°C**, dengan tegangan stabil **2.0 – 2.5 V**.\n- **Status Operasional Saat Ini**: $\\Delta T = ${state.teg.deltaT}^\\circ\\text{C}$ menghasilkan daya aktual **${state.teg.power} ${state.teg.powerUnit}**.\n- **Keunggulan**: Sistem solid-state tanpa komponen bergerak, andal, dan memanfaatkan limbah flue gas tanpa mengganggu proses peleburan.`;
+    content = `### Analisis Pemanenan Energi Termoelektrik (TEG)\n\nBerdasarkan data penelitian CYPHER 2026:\n- **Formula Regresi Empiris**: P = 0.52 ΔT + 0.08 dengan koefisien determinasi R² = 0.94.\n- **Hasil Uji Prototipe (TEC1-12706)**: Menghasilkan daya rata-rata **3.2 – 4.4 W** pada gradien suhu ΔT sebesar **6.5 – 8.2°C**, dengan tegangan stabil **2.0 – 2.5 V**.\n- **Status Operasional Saat Ini**: ΔT = ${state.teg.deltaT}°C menghasilkan daya aktual **${state.teg.power} ${state.teg.powerUnit}**.\n- **Keunggulan**: Sistem solid-state tanpa komponen bergerak, andal, dan memanfaatkan limbah flue gas tanpa mengganggu proses peleburan.`;
   } else if (p.includes('filter') || p.includes('filtrasi') || p.includes('co') || p.includes('wilcoxon') || p.includes('aliran')) {
-    content = `### Analisis Kinerja Modul Filtrasi Cerdas CYPHER\n\nBerdasarkan uji statistik **Wilcoxon Signed-Rank** ($p < 0.05$):\n1. **Reduksi CO**: Turun signifikan rata-rata **15 ppm** (dari 45 ppm tanpa filter menjadi 28 ppm pada menit ke-45–60).\n2. **Reduksi $\\text{CO}_2$**: Turun signifikan **1.0%** (dari 4.2% menjadi 3.0%).\n3. **Stabilitas Aerodinamika & Termal**: Modul filter terbukti **tidak menghambat aliran gas** (laju alir konstan 2.5–2.9 L/min) dan suhu gas tetap stabil di kisaran 40–48°C.\n4. **Kestabilan $\\text{O}_2$**: Kadar $\\text{O}_2$ stabil di kisaran 20.4%–20.8%, menandakan proses pembakaran tungku tidak terganggu.`;
+    content = `### Analisis Kinerja Modul Filtrasi Cerdas CYPHER\n\nBerdasarkan uji statistik **Wilcoxon Signed-Rank** (p < 0.05):\n1. **Reduksi CO**: Turun signifikan rata-rata **15 ppm** (dari 45 ppm tanpa filter menjadi 28 ppm pada menit ke-45–60).\n2. **Reduksi CO₂**: Turun signifikan **1.0%** (dari 4.2% menjadi 3.0%).\n3. **Stabilitas Aerodinamika & Termal**: Modul filter terbukti **tidak menghambat aliran gas** (laju alir konstan 2.5–2.9 L/min) dan suhu gas tetap stabil di kisaran 40–48°C.\n4. **Kestabilan O₂**: Kadar O₂ stabil di kisaran 20.4%–20.8%, menandakan proses pembakaran tungku tidak terganggu.`;
   } else if (p.includes('ens160') || p.includes('aht21') || p.includes('arduino') || p.includes('esp32') || p.includes('iot') || p.includes('cems')) {
-    content = `### Arsitektur CEMS & IoT Closed-Loop Controller\n\n- **Sensor Endpoints**: Sensor **ENS160** (deteksi gas kualitas udara, CO, $\\text{CO}_2$, VOC) dipadukan dengan sensor **AHT21** (pengukuran temperatur dan kelembaban presisi tinggi).\n- **Pemrosesan Mikro**: Data diakuisisi oleh **Arduino Nano** lalu ditransmisikan ke mikrokontroler **ESP32**.\n- **Loop Tertutup Adaptif**: CEMS tidak hanya mencatat kepatuhan regulasi secara pasif, tetapi bertindak sebagai otak kendali yang secara real-time menyesuaikan intensitas pemanenan TEG dan filtrasi cerdas berdasarkan fluktuasi emisi cerobong.`;
+    content = `### Arsitektur CEMS & IoT Closed-Loop Controller\n\n- **Sensor Endpoints**: Sensor **ENS160** (deteksi gas kualitas udara, CO, CO₂, VOC) dipadukan dengan sensor **AHT21** (pengukuran temperatur dan kelembaban presisi tinggi).\n- **Pemrosesan Mikro**: Data diakuisisi oleh **Arduino Nano** lalu ditransmisikan ke mikrokontroler **ESP32**.\n- **Loop Tertutup Adaptif**: CEMS tidak hanya mencatat kepatuhan regulasi secara pasif, tetapi bertindak sebagai otak kendali yang secara real-time menyesuaikan intensitas pemanenan TEG dan filtrasi cerdas berdasarkan fluktuasi emisi cerobong.`;
   } else if (p.includes('roadmap') || p.includes('peta jalan') || p.includes('2045') || p.includes('2060') || p.includes('bappenas') || p.includes('target')) {
     content = `### Peta Jalan Dekarbonisasi Menuju NZE 2060 & Indonesia Emas 2045\n\nSesuai Peta Jalan Dekarbonisasi Industri Nikel Nasional (Bappenas & WRI Indonesia target reduksi 81%):\n- **Tahap 1 (2026–2030)**: Validasi prototipe dan uji coba di 1 unit smelter skala industri.\n- **Tahap 2 (2030–2040)**: Pengembangan modul TEG paralel (daya 10x lipat) & filter cerdas berbasis AI/Machine Learning untuk optimasi prediktif.\n- **Tahap 3 (2040–2045)**: Integrasi jaringan pemantauan IoT nasional dan penetapan CYPHER sebagai standar kepatuhan wajib (*mandatory compliance*) bagi seluruh smelter Indonesia.`;
   } else {
-    content = `### Rekomendasi Kendali CYPHER\n\nKondisi telemetri unit **${state.unitId}**:\n- **Daya Listrik TEG**: ${state.teg.power} ${state.teg.powerUnit} ($\\Delta T = ${state.teg.deltaT}^\\circ\\text{C}$)\n- **Status Emisi CEMS**: $\\text{SO}_2 = ${state.cems.so2}$, $\\text{CO} = ${state.cems.co}$ ppm, $\\text{CO}_2 = ${state.cems.co2}\\%$\n- **Efektivitas Filter**: ${state.filter.active ? 'AKTIF (Efisiensi 99.4%)' : 'BYPASS (Peringatan Emisi)'}\n\nSistem beroperasi optimal dalam kepatuhan baku mutu lingkungan.`;
+    content = `### Rekomendasi Kendali CYPHER\n\nKondisi telemetri unit **${state.unitId}**:\n- **Daya Listrik TEG**: ${state.teg.power} ${state.teg.powerUnit} (ΔT = ${state.teg.deltaT}°C)\n- **Status Emisi CEMS**: SO₂ = ${state.cems.so2}, CO = ${state.cems.co} ppm, CO₂ = ${state.cems.co2}%\n- **Efektivitas Filter**: ${state.filter.active ? 'AKTIF (Efisiensi 99.4%)' : 'BYPASS (Peringatan Emisi)'}\n\nSistem beroperasi optimal dalam kepatuhan baku mutu lingkungan.`;
   }
 
   return {

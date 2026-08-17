@@ -13,6 +13,7 @@ import {
 import { CopilotMessage, ScadaSystemState } from '../../engine/cypherTypes';
 import { DEFAULT_COPILOT_PROMPTS } from '../../engine/cypherData';
 import { CypherMark } from '../brand/CypherMark';
+import { useSound } from '../../utils/SoundProvider';
 
 interface Props {
   state: ScadaSystemState;
@@ -27,6 +28,7 @@ export const CypherCopilot: React.FC<Props> = ({
 }) => {
   const [draft, setDraft] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
+  const { playClick } = useSound();
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,26 +37,27 @@ export const CypherCopilot: React.FC<Props> = ({
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!draft.trim()) return;
+    playClick();
     onSendMessage(draft);
     setDraft('');
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col h-[560px] overflow-hidden">
+    <div className="rounded-3xl bg-white border border-black/[.08] shadow-sm flex flex-col h-[580px] overflow-hidden text-hi">
       {/* Header */}
-      <div className="p-4 px-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+      <div className="p-4 px-6 border-b border-black/[.06] flex items-center justify-between bg-slate-50/80">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-core-500/10 text-core-600 flex items-center justify-center">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-display font-bold text-[15px] text-slate-900 flex items-center gap-2">
+            <h3 className="font-display font-bold text-[15px] text-hi flex items-center gap-2">
               <span>CYPHER AI Copilot &amp; Engineering Advisory</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-core-500/10 text-core-700 font-bold border border-core-500/20">
                 UGM 2026 MODEL
               </span>
             </h3>
-            <p className="text-[11.5px] text-slate-500">
+            <p className="text-[11.5px] text-mid">
               Asisten rekayasa cerdas untuk optimasi TEG Seebeck, filtrasi gas cerobong, dan kepatuhan CEMS.
             </p>
           </div>
@@ -62,7 +65,7 @@ export const CypherCopilot: React.FC<Props> = ({
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 scroll-paper bg-slate-50/30">
+      <div className="flex-1 overflow-y-auto p-5 space-y-4 scroll-paper bg-slate-50/40">
         {messages.map((m) => {
           const isUser = m.role === 'user';
           return (
@@ -78,8 +81,8 @@ export const CypherCopilot: React.FC<Props> = ({
               <div
                 className={`p-4 rounded-3xl max-w-2xl text-[13px] leading-relaxed shadow-sm ${
                   isUser
-                    ? 'bg-cyan-600 text-white rounded-tr-sm'
-                    : 'bg-white text-slate-800 border border-slate-200 rounded-tl-sm'
+                    ? 'bg-gradient-to-r from-core-500 to-cyan-600 text-white rounded-tr-sm'
+                    : 'bg-white text-hi border border-black/[.08] rounded-tl-sm'
                 }`}
               >
                 <div
@@ -89,16 +92,16 @@ export const CypherCopilot: React.FC<Props> = ({
                       .replace(/\n\n/g, '<br/><br/>')
                       .replace(/\n/g, '<br/>')
                       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/### (.*?)(<br\/>|$)/g, '<div class="font-bold text-[14px] mb-1">$1</div>'),
+                      .replace(/\*(.*?)\*/g, '<em class="text-core-600">$1</em>')
+                      .replace(/### (.*?)(<br\/>|$)/g, '<div class="font-display font-bold text-[14.5px] text-hi mb-1">$1</div>'),
                   }}
                 />
-                <div className={`text-[10px] mt-2 font-mono ${isUser ? 'text-cyan-100' : 'text-slate-400'}`}>
+                <div className={`text-[10px] mt-2.5 font-mono ${isUser ? 'text-cyan-100' : 'text-lo'}`}>
                   {m.timestamp}
                 </div>
               </div>
               {isUser && (
-                <div className="w-8 h-8 rounded-xl bg-cyan-100 text-cyan-800 flex items-center justify-center shrink-0 mt-1">
+                <div className="w-8 h-8 rounded-xl bg-core-500/10 text-core-700 border border-core-500/20 flex items-center justify-center shrink-0 mt-1">
                   <User className="w-4 h-4" />
                 </div>
               )}
@@ -109,15 +112,18 @@ export const CypherCopilot: React.FC<Props> = ({
       </div>
 
       {/* Suggested Starter Questions (Chips) */}
-      <div className="px-5 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none">
-        <span className="text-[11px] font-mono font-bold text-slate-600 uppercase shrink-0">
+      <div className="px-5 py-2.5 bg-slate-50 border-t border-black/[.06] flex items-center gap-2 overflow-x-auto scrollbar-none">
+        <span className="text-[10.5px] font-mono font-bold text-lo uppercase shrink-0">
           Pertanyaan Kunci:
         </span>
         {DEFAULT_COPILOT_PROMPTS.map((q, idx) => (
           <button
             key={idx}
-            onClick={() => onSendMessage(q)}
-            className="px-3 py-1 rounded-full bg-white border border-slate-200 hover:border-cyan-500 hover:text-cyan-700 text-[11.5px] font-medium text-slate-700 whitespace-nowrap transition-all cursor-pointer shadow-2xs shrink-0"
+            onClick={() => {
+              playClick();
+              onSendMessage(q);
+            }}
+            className="px-3 py-1 rounded-full bg-white border border-black/[.08] hover:border-core-500 hover:text-core-600 text-[11.5px] font-medium text-mid whitespace-nowrap transition-all cursor-pointer shadow-2xs shrink-0"
           >
             {q.length > 55 ? `${q.substring(0, 55)}...` : q}
           </button>
@@ -125,18 +131,18 @@ export const CypherCopilot: React.FC<Props> = ({
       </div>
 
       {/* Input Composer Form */}
-      <form onSubmit={handleSubmit} className="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="p-3.5 bg-white border-t border-black/[.08] flex items-center gap-2">
         <input
           type="text"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Tanyakan analisis termal Seebeck, reduksi emisi Wilcoxon, atau kepatuhan CEMS..."
-          className="flex-1 px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-all"
+          className="flex-1 px-4 py-2.5 rounded-2xl bg-slate-50 border border-black/[.08] text-[13px] text-hi placeholder:text-lo focus:outline-none focus:border-core-500 focus:bg-white transition-all"
         />
         <button
           type="submit"
           disabled={!draft.trim()}
-          className="h-10 px-5 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white text-[13px] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40"
+          className="h-10 px-5 rounded-2xl bg-core-500 hover:brightness-110 text-white text-[13px] font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 shadow-sm"
         >
           <span>Kirim</span>
           <Send className="w-3.5 h-3.5" />

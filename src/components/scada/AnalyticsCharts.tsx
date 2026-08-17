@@ -7,8 +7,11 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
+  Zap,
+  Wind,
 } from 'lucide-react';
 import { EXPERIMENTAL_SERIES } from '../../engine/cypherData';
+import { useSound } from '../../utils/SoundProvider';
 
 interface Props {
   powerWaveform: number[];
@@ -24,49 +27,59 @@ export const AnalyticsCharts: React.FC<Props> = ({
   powerUnit = 'W',
 }) => {
   const [activeTab, setActiveTab] = useState<'experiment_teg' | 'experiment_cems' | 'live_stream'>('experiment_teg');
+  const { playClick } = useSound();
 
   return (
-    <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-6 space-y-5">
+    <div className="rounded-3xl bg-white border border-black/[.08] shadow-sm p-6 space-y-6 text-hi">
       {/* Top Header & Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-black/[.08]">
         <div>
-          <div className="flex items-center gap-2 text-cyan-700 font-mono text-[11px] font-bold uppercase tracking-wider mb-0.5">
+          <div className="flex items-center gap-2 text-core-600 font-mono text-[11px] font-bold uppercase tracking-wider mb-0.5">
             <BarChart3 className="w-3.5 h-3.5" />
             <span>Validasi Data Uji Empiris Laboratorium (UGM 2026)</span>
           </div>
-          <h3 className="font-display text-[17px] font-bold text-slate-900">
+          <h3 className="font-display text-[17px] font-bold text-hi">
             Grafik Kinerja Termal, Elektrik &amp; Komparasi Filtrasi Gas
           </h3>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-xl text-[12px] font-semibold">
+        <div className="flex items-center bg-slate-100 p-1 rounded-2xl border border-black/[.06] text-[12px] font-semibold">
           <button
-            onClick={() => setActiveTab('experiment_teg')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            onClick={() => {
+              playClick();
+              setActiveTab('experiment_teg');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
               activeTab === 'experiment_teg'
-                ? 'bg-white text-slate-900 shadow-sm font-bold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-hi font-bold shadow-sm'
+                : 'text-mid hover:text-hi'
             }`}
           >
             ⚡ Data Termal &amp; Daya TEG
           </button>
           <button
-            onClick={() => setActiveTab('experiment_cems')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            onClick={() => {
+              playClick();
+              setActiveTab('experiment_cems');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
               activeTab === 'experiment_cems'
-                ? 'bg-white text-slate-900 shadow-sm font-bold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-hi font-bold shadow-sm'
+                : 'text-mid hover:text-hi'
             }`}
           >
             🌱 Reduksi CO &amp; CO₂ Filter
           </button>
           <button
-            onClick={() => setActiveTab('live_stream')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            onClick={() => {
+              playClick();
+              setActiveTab('live_stream');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
               activeTab === 'live_stream'
-                ? 'bg-white text-slate-900 shadow-sm font-bold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-hi font-bold shadow-sm'
+                : 'text-mid hover:text-hi'
             }`}
           >
             📈 Osiloskop Real-Time
@@ -79,12 +92,12 @@ export const AnalyticsCharts: React.FC<Props> = ({
         <div className="space-y-6 anim-rise">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Sub-chart A: Thermal Parameters (T-hot, T-cold, Delta-T) */}
-            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-5 rounded-2xl bg-slate-50 border border-black/[.06]">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-[13.5px] text-slate-900">
+                <h4 className="font-bold text-[13.5px] text-hi">
                   (a) Grafik Rata-Rata T-hot, T-cold &amp; ΔT per 15 Menit
                 </h4>
-                <span className="text-[11px] font-mono text-cyan-700 font-semibold">
+                <span className="text-[11px] font-mono text-core-600 font-semibold">
                   Satuan: °C
                 </span>
               </div>
@@ -170,12 +183,12 @@ export const AnalyticsCharts: React.FC<Props> = ({
             </div>
 
             {/* Sub-chart B: Electrical Parameters (Voltage V & Power W) */}
-            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-5 rounded-2xl bg-slate-50 border border-black/[.06]">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-[13.5px] text-slate-900">
+                <h4 className="font-bold text-[13.5px] text-hi">
                   (b) Grafik Rata-Rata Tegangan (V) &amp; Daya (W) per 15 Menit
                 </h4>
-                <span className="text-[11px] font-mono text-cyan-700 font-semibold">
+                <span className="text-[11px] font-mono text-core-600 font-semibold">
                   P = 0.52 ΔT + 0.08 (R² = 0.94)
                 </span>
               </div>
@@ -195,7 +208,7 @@ export const AnalyticsCharts: React.FC<Props> = ({
                   <text x="30" y="104" fontSize="9" fill="#64748b" textAnchor="end">2.0</text>
                   <text x="30" y="144" fontSize="9" fill="#64748b" textAnchor="end">0.5</text>
 
-                  {/* Power P_avg (Red/Rose Line ~3.2 - 4.4 W) */}
+                  {/* Power P_avg (Rose Line ~3.2 - 4.4 W) */}
                   <path
                     d={`M 70,${140 - ((3.6 - 0.5) / 4.5) * 120} L 170,${140 - ((4.4 - 0.5) / 4.5) * 120} L 270,${140 - ((3.2 - 0.5) / 4.5) * 120} L 370,${140 - ((3.8 - 0.5) / 4.5) * 120}`}
                     fill="none"
@@ -238,16 +251,16 @@ export const AnalyticsCharts: React.FC<Props> = ({
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
                   P_avg (Watt Daya Listrik)
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-cyan-600">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-600" />
+                <span className="inline-flex items-center gap-1.5 text-core-600">
+                  <span className="w-2.5 h-2.5 rounded-full bg-core-500" />
                   V_avg (Volt Tegangan DC)
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-cyan-50/60 border border-cyan-200/80 text-[12.5px] text-cyan-900 flex items-start gap-3">
-            <Info className="w-4 h-4 text-cyan-700 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-cyan-50/70 border border-cyan-200/80 text-[12.5px] text-cyan-900 flex items-start gap-3">
+            <Info className="w-4 h-4 text-core-600 shrink-0 mt-0.5" />
             <p>
               <strong>Kesimpulan Termal TEG:</strong> Modul TEG tipe TEC1-12706 terbukti menghasilkan daya listrik rata-rata <strong>3,2–4,4 W</strong> pada perbedaan suhu <strong>6,5–8,2°C</strong> dengan tegangan stabil <strong>2,0–2,5 V</strong>. Hubungan erat dinyatakan dalam model regresi <em>P = 0,52 ΔT + 0,08 (R² = 0,94)</em>: semakin besar gradien suhu cerobong, semakin besar energi listrik yang dipanen.
             </p>
@@ -260,9 +273,9 @@ export const AnalyticsCharts: React.FC<Props> = ({
         <div className="space-y-6 anim-rise">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Sub-chart A: CO (ppm) Reduction */}
-            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-5 rounded-2xl bg-slate-50 border border-black/[.06]">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-[13.5px] text-slate-900">
+                <h4 className="font-bold text-[13.5px] text-hi">
                   (a) Perubahan Kadar CO (ppm) per 15 Menit
                 </h4>
                 <span className="text-[11px] font-mono text-emerald-700 font-semibold">
@@ -319,8 +332,8 @@ export const AnalyticsCharts: React.FC<Props> = ({
               </div>
 
               <div className="mt-3 flex items-center justify-center gap-5 text-[11px] font-semibold">
-                <span className="inline-flex items-center gap-1.5 text-cyan-700">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-600" />
+                <span className="inline-flex items-center gap-1.5 text-core-600">
+                  <span className="w-2.5 h-2.5 rounded-full bg-core-500" />
                   CO (ppm) Dengan Filter
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-rose-600">
@@ -331,9 +344,9 @@ export const AnalyticsCharts: React.FC<Props> = ({
             </div>
 
             {/* Sub-chart B: CO2 (%) Reduction */}
-            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-5 rounded-2xl bg-slate-50 border border-black/[.06]">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-[13.5px] text-slate-900">
+                <h4 className="font-bold text-[13.5px] text-hi">
                   (b) Perubahan Kadar CO₂ (%) per 15 Menit
                 </h4>
                 <span className="text-[11px] font-mono text-emerald-700 font-semibold">
@@ -390,8 +403,8 @@ export const AnalyticsCharts: React.FC<Props> = ({
               </div>
 
               <div className="mt-3 flex items-center justify-center gap-5 text-[11px] font-semibold">
-                <span className="inline-flex items-center gap-1.5 text-cyan-700">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-600" />
+                <span className="inline-flex items-center gap-1.5 text-core-600">
+                  <span className="w-2.5 h-2.5 rounded-full bg-core-500" />
                   CO₂ (%) Dengan Filter
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-rose-600">
@@ -402,8 +415,8 @@ export const AnalyticsCharts: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 text-[12.5px] text-emerald-900 flex items-start gap-3">
-            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 text-[12.5px] text-emerald-900 flex items-start gap-3">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <p>
               <strong>Uji Statistik Wilcoxon Signed-Rank (p &lt; 0.05):</strong> Membuktikan penurunan kadar CO dan CO₂ yang signifikan setelah gas melewati filter. Pada menit ke-45 hingga 60, kadar CO dengan filter hanya <strong>28 ppm</strong> (vs 45 ppm tanpa filter) dan CO₂ hanya <strong>3,0%</strong> (vs 4,2%). Kestabilan laju alir (2,5–2,9 L/min) dan suhu gas (40–48°C) memastikan filtrasi tidak mengganggu kinerja tungku pembakaran.
             </p>
@@ -414,7 +427,7 @@ export const AnalyticsCharts: React.FC<Props> = ({
       {/* Tab 3: Real-Time High-Speed Waveform Stream */}
       {activeTab === 'live_stream' && (
         <div className="space-y-4 anim-rise">
-          <div className="p-5 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <div className="p-5 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-md">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
@@ -429,11 +442,11 @@ export const AnalyticsCharts: React.FC<Props> = ({
               </div>
             </div>
 
-            <div className="h-[220px] w-full relative bg-slate-950/60 rounded-xl p-3 border border-slate-800 flex items-end">
+            <div className="h-[220px] w-full relative bg-slate-950/80 rounded-xl p-3 border border-slate-800 flex items-end">
               <svg className="w-full h-full overflow-visible" viewBox="0 0 500 180" preserveAspectRatio="none">
-                <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.06)" strokeDasharray="4 4" />
-                <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.06)" strokeDasharray="4 4" />
-                <line x1="0" y1="150" x2="500" y2="150" stroke="rgba(255,255,255,0.06)" strokeDasharray="4 4" />
+                <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" />
+                <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" />
+                <line x1="0" y1="150" x2="500" y2="150" stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" />
 
                 {/* Power Path (Cyan) */}
                 <path
