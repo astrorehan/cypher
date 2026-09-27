@@ -68,13 +68,13 @@ export const ProfileView: React.FC<Props> = ({ onNavigate }) => {
       {/* Operator Header Card */}
       <div className="p-8 rounded-3xl bg-white border border-black/[.08] shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
         <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-core-500 to-cyan-600 text-white flex items-center justify-center font-display text-[28px] font-extrabold shadow-lg shrink-0">
-          AN
+          VA
         </div>
 
         <div className="flex-1 text-center sm:text-left">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1.5">
             <h1 className="font-display text-[24px] font-extrabold text-hi">
-              Ahmad Nugroho
+              Venta Alyqa
             </h1>
             <span className="px-3 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 font-mono text-[11px] font-bold">
               ● SEDANG BERTUGAS (SHIFT 1)
@@ -101,7 +101,7 @@ export const ProfileView: React.FC<Props> = ({ onNavigate }) => {
             <div className="space-y-3 text-[13px]">
               <div className="flex items-center justify-between py-1.5 border-b border-black/[.04]">
                 <span className="text-mid">Email Resmi:</span>
-                <span className="font-medium text-hi">ahmad.nugroho@smelter.co.id</span>
+                <span className="font-medium text-hi">venta.alyqa@smelter.co.id</span>
               </div>
               <div className="flex items-center justify-between py-1.5 border-b border-black/[.04]">
                 <span className="text-mid">Nomor Telepon:</span>

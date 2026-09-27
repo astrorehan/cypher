@@ -168,7 +168,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
       marker.bindPopup(`
         <div style="font-family: 'Inter', sans-serif; padding: 4px; min-width: 180px;">
           <div style="font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase; margin-bottom: 2px;">
-            CYPHER EMISSION NODE
+            NEXUS EMISSION NODE
           </div>
           <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
             ${region.name}

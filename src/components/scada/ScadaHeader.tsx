@@ -69,7 +69,7 @@ export const ScadaHeader: React.FC<Props> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-display font-black text-[16px] tracking-[0.2em] bg-gradient-to-r from-blue-700 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
-                  CYPHER
+                  NEXUS
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-core-500/10 text-core-600 font-bold border border-core-500/20">
                   SCADA LIVE

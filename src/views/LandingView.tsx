@@ -19,37 +19,34 @@ const PillButton: React.FC<{
   </button>
 );
 
-const ACRONYM_ITEMS = [
-  { letter: 'C', word: 'Carbon-neutral', desc: 'Mendukung target Net Zero Emissions Indonesia 2060' },
-  { letter: 'Y', word: 'Yield', desc: 'Hasil produksi hilirisasi mineral nikel yang bernilai tambah tinggi' },
-  { letter: 'P', word: 'Predictive', desc: 'Kendali prediktif berbasis machine learning & regresi termal' },
-  { letter: 'H', word: 'Hybrid', desc: 'Menggabungkan sensor IoT fisik (ENS160/AHT21) + algoritma digital' },
-  { letter: 'E', word: 'Emission', desc: 'Target utama pengendalian emisi SO₂, CO, CO₂ & partikulat' },
-  { letter: 'R', word: 'Regulator', desc: 'Pengendali otomatis loop tertutup pemulihan panas & filtrasi' },
-];
-
 export const LandingView: React.FC<Props> = ({ onNavigate }) => (
   <main className="relative z-10 flex-1 min-h-0 flex flex-col items-center justify-center px-6 pb-12 text-center max-w-5xl mx-auto w-full">
     {/* Floating Badge */}
     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm mb-6 anim-rise">
       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
       <span className="text-[12px] font-mono font-bold text-cyan-800">
-        KAMAKARYA ESSAY COMPETITION 2026 • UNIVERSITAS GADJAH MADA
+        NATIONAL ERCOM COMPETITION 2026 • UNIVERSITAS GADJAH MADA
       </span>
     </div>
 
     {/* Main Headline */}
-    <h1 className="font-display font-extrabold -tracking-[.035em] leading-[1.08] text-[clamp(28px,5.5vw,60px)] text-hi anim-rise delay-1">
+    <h1 className="font-display font-extrabold -tracking-[.03em] leading-[1.08] text-[clamp(22px,4.3vw,46px)] text-hi anim-rise delay-1">
       Integrasi Sistem Kendali Emisi Cerdas
       <br />
       <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
-        CYPHER
+        NEXUS
       </span>{' '}
       untuk Smelter Nikel Hijau
     </h1>
 
+    <div className="mt-5 flex items-center justify-center anim-rise delay-2">
+      <span className="inline-flex items-center justify-center rounded-full border border-cyan-200 bg-cyan-50/80 px-3 py-1 text-[9px] md:text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-cyan-700">
+        NEXUS (Neutral-emission eXchange and Unified Smart-Monitoring System)
+      </span>
+    </div>
+
     {/* Subtitle */}
-    <p className="mt-6 max-w-[760px] text-[15px] md:text-[17px] leading-[1.7] text-mid anim-rise delay-2">
+    <p className="mt-5 max-w-[760px] text-[15px] md:text-[17px] leading-[1.7] text-mid anim-rise delay-2">
       Platform kendali loop tertutup berbasis IoT yang mengintegrasikan pemulihan limbah panas (TEG Seebeck), filtrasi polutan cerdas, dan Continuous Emission Monitoring System (CEMS) untuk percepatan transisi Net Zero Emissions 2060.
     </p>
 
@@ -69,53 +66,31 @@ export const LandingView: React.FC<Props> = ({ onNavigate }) => (
       </div>
     </div>
 
-    {/* Acronym Breakdown Strip */}
-    <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 w-full max-w-4xl text-left anim-rise delay-3">
-      {ACRONYM_ITEMS.map((item) => (
-        <div
-          key={item.letter}
-          className="p-3 rounded-2xl bg-white/70 backdrop-blur-md border border-slate-200 shadow-2xs hover:bg-white transition-all"
-        >
-          <div className="flex items-center gap-1.5">
-            <span className="w-6 h-6 rounded-lg bg-cyan-500/15 text-cyan-800 font-display font-extrabold text-[13px] flex items-center justify-center">
-              {item.letter}
-            </span>
-            <span className="font-bold text-[12px] text-slate-900 truncate">
-              {item.word}
-            </span>
-          </div>
-          <p className="text-[10.5px] text-slate-500 mt-1 leading-snug">
-            {item.desc}
-          </p>
-        </div>
-      ))}
-    </div>
-
     {/* Action Buttons */}
-    <div className="mt-10 flex flex-wrap items-center justify-center gap-3.5 anim-rise delay-4">
-      <button
-        onClick={() => onNavigate('simulasi')}
-        className="h-14 px-8 rounded-full text-[15px] font-bold text-white bg-gradient-to-r from-core-500 via-cyan-600 to-emerald-600 shadow-[0_14px_40px_-12px_rgba(2,132,199,.5)] inline-flex items-center gap-3 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgba(2,132,199,.6)] active:scale-[.99] transition-all cursor-pointer"
-      >
-        Buka Ruang Kontrol Smelter (SCADA)
-        <ArrowRight className="w-4 h-4" />
-      </button>
+    <div className="mt-10 flex flex-col items-center gap-3.5 anim-rise delay-4">
+      <div className="flex flex-wrap items-center justify-center gap-3.5">
+        <button
+          onClick={() => onNavigate('simulasi')}
+          className="h-14 px-8 rounded-full text-[15px] font-bold text-white bg-gradient-to-r from-core-500 via-cyan-600 to-emerald-600 shadow-[0_14px_40px_-12px_rgba(2,132,199,.5)] inline-flex items-center gap-3 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgba(2,132,199,.6)] active:scale-[.99] transition-all cursor-pointer"
+        >
+          Buka Ruang Kontrol Smelter (SCADA)
+          <ArrowRight className="w-4 h-4" />
+        </button>
 
-      <PillButton onClick={() => onNavigate('nasional')}>
-        Hub Emisi Nasional 2045
-      </PillButton>
+        <PillButton onClick={() => onNavigate('nasional')}>
+          Hub Emisi Nasional 2045
+        </PillButton>
+      </div>
 
-      <PillButton onClick={() => onNavigate('metodologi')}>
-        Metodologi &amp; Sains TEG
-      </PillButton>
+      <div className="flex flex-wrap items-center justify-center gap-3.5">
+        <PillButton onClick={() => onNavigate('metodologi')}>
+          Metodologi &amp; Sains TEG
+        </PillButton>
 
-      <PillButton onClick={() => onNavigate('profil')}>
-        Profil Operator HSE
-      </PillButton>
-
-      <PillButton onClick={() => onNavigate('tentang')}>
-        Tentang Penulis UGM
-      </PillButton>
+        <PillButton onClick={() => onNavigate('profil')}>
+          Profil Operator HSE
+        </PillButton>
+      </div>
     </div>
   </main>
 );

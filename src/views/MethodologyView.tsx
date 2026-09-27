@@ -99,7 +99,7 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
           LANDASAN SAINS &amp; METODOLOGI REKAYASA
         </div>
         <h1 className="font-display text-[32px] md:text-[42px] font-extrabold text-hi leading-tight">
-          Arsitektur Integrasi Sistem CYPHER
+          Arsitektur Integrasi Sistem NEXUS
         </h1>
         <p className="mt-3 text-[15px] text-mid leading-relaxed">
           Mengintegrasikan pemulihan limbah panas (TEG), penyaringan polutan cerdas, dan Continuous Emission Monitoring System (CEMS) berbasis IoT ke dalam satu ekosistem kendali loop tertutup.
@@ -227,7 +227,7 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
             PETA JALAN PENGEMBANGAN TEKNOLOGI
           </div>
           <h2 className="font-display text-[24px] font-extrabold text-white">
-            Peta Jalan CYPHER Menuju Net Zero Emissions 2060
+            Peta Jalan NEXUS Menuju Net Zero Emissions 2060
           </h2>
           <p className="text-[13.5px] text-slate-300 mt-1 leading-relaxed">
             Menyelaraskan inovasi dengan Peta Jalan Dekarbonisasi Industri Nikel Nasional (Bappenas &amp; WRI) yang menargetkan reduksi emisi 81% pada tahun 2045.

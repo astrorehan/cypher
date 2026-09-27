@@ -146,7 +146,7 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            <span>CYPHER AI Copilot Advisory</span>
+            <span>NEXUS AI Copilot Advisory</span>
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping ml-1" />
           </button>
         </div>
@@ -243,7 +243,7 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
         </div>
       )}
 
-      {/* Tab 3: CYPHER AI Engineering Copilot */}
+      {/* Tab 3: NEXUS AI Engineering Copilot */}
       {activeTab === 'copilot' && (
         <div className="space-y-6 anim-rise">
           <CypherCopilot

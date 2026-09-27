@@ -46,7 +46,7 @@ export const ProcessSchematic: React.FC<Props> = ({
             <span>Digital Twin • Skema Alir Proses Terintegrasi (P&amp;ID)</span>
           </div>
           <h2 className="font-display text-[18px] md:text-[20px] font-extrabold text-hi">
-            Integrasi 3 Modul CYPHER: Pemanenan Panas, Filtrasi &amp; CEMS IoT
+            Integrasi 3 Modul NEXUS: Pemanenan Panas, Filtrasi &amp; CEMS IoT
           </h2>
         </div>
 
@@ -292,7 +292,7 @@ export const ProcessSchematic: React.FC<Props> = ({
             )}
             {selectedNode === 'furnace' && (
               <span>
-                <strong className="text-hi">Tungku Peleburan Smelter:</strong> Menghasilkan gas buang flue gas bertemperatur tinggi. Sistem CYPHER mendayagunakan panas buang ini sebagai sumber energi terbarukan, alih-alih melepaskannya sebagai residu berbahaya.
+                <strong className="text-hi">Tungku Peleburan Smelter:</strong> Menghasilkan gas buang flue gas bertemperatur tinggi. Sistem NEXUS mendayagunakan panas buang ini sebagai sumber energi terbarukan, alih-alih melepaskannya sebagai residu berbahaya.
               </span>
             )}
             {selectedNode === 'stack' && (

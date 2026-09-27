@@ -26,7 +26,7 @@ const TEAM: Member[] = [
     nim: '26/581881/KH/13096',
     role: 'Ketua Tim & Rekayasa Termal IoT',
     ringkas: 'Perancangan modul termoelektrik TEG Seebeck dan integrasi sistem mikrokontroler Arduino Nano ke ESP32.',
-    bio: 'Bertanggung jawab atas konseptualisasi gagasan CYPHER, pengujian prototipe termoelektrik (TEC1-12706), perumusan model regresi linear P = 0,52 ΔT + 0,08, serta integrasi pipeline komunikasi data mikrokontroler.',
+    bio: 'Bertanggung jawab atas konseptualisasi gagasan NEXUS, pengujian prototipe termoelektrik (TEC1-12706), perumusan model regresi linear P = 0,52 ΔT + 0,08, serta integrasi pipeline komunikasi data mikrokontroler.',
     tags: ['Termodinamika TEG', 'Pipeline ESP32/Nano', 'Manajemen Inovasi'],
     tint: 'var(--color-core-500)',
     tint2: 'var(--color-sinero-cyan)',
@@ -37,7 +37,7 @@ const TEAM: Member[] = [
     nim: '25/560845/PS/24033',
     role: 'Analisis Kebijakan & Dampak Lingkungan',
     ringkas: 'Penyusunan peta jalan dekarbonisasi industri nikel nasional, analisis dampak kesehatan masyarakat, dan kepatuhan baku mutu emisi.',
-    bio: 'Mengelola telaah regulasi lingkungan (Permen LHK No. 15/2019 dan Permenkes No. 2/2023), perancangan integrasi CYPHER dengan Peta Jalan Dekarbonisasi Industri Nikel Bappenas-WRI 2045, serta evaluasi penurunan prevalensi ISPA di kawasan industri smelter.',
+    bio: 'Mengelola telaah regulasi lingkungan (Permen LHK No. 15/2019 dan Permenkes No. 2/2023), perancangan integrasi NEXUS dengan Peta Jalan Dekarbonisasi Industri Nikel Bappenas-WRI 2045, serta evaluasi penurunan prevalensi ISPA di kawasan industri smelter.',
     tags: ['Kebijakan Dekarbonisasi', 'Analisis Emisi CEMS', 'Peta Jalan 2045'],
     tint: 'var(--color-sinero-emerald)',
     tint2: 'var(--color-core-400)',
@@ -56,10 +56,10 @@ const TEAM: Member[] = [
 ];
 
 const COMPETITION_INFO = {
-  event: 'KAMAKARYA ESSAY COMPETITION (KEC) 2026',
+  event: 'NATIONAL ERCOM COMPETITION 2026',
   subtheme: 'Sustainable Economy & Green Technology',
   title:
-    'CYPHER: Integrasi Sistem Kendali Emisi Cerdas Berbasis Internet of Things untuk Hilirisasi dan Dekarbonisasi Menuju Net Zero Emissions Indonesia 2060',
+    'NEXUS: Integrasi Sistem Kendali Emisi Cerdas Berbasis Internet of Things untuk Hilirisasi dan Dekarbonisasi Menuju Net Zero Emissions Indonesia 2060',
   institution: 'UNIVERSITAS GADJAH MADA, YOGYAKARTA',
 };
 
@@ -220,13 +220,13 @@ export const AboutView: React.FC<Props> = ({ onNavigate }) => {
       {/* Page Title */}
       <div className="text-center max-w-3xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 font-mono text-[11px] font-bold mb-3">
-          TIM PENELITI &amp; INOVASI CYPHER UGM
+          TIM PENELITI &amp; INOVASI NEXUS UGM
         </div>
         <h1 className="font-display text-[32px] md:text-[42px] font-extrabold text-hi leading-tight">
-          Penulis &amp; Pengembang Gagasan CYPHER
+          Penulis &amp; Pengembang Gagasan NEXUS
         </h1>
         <p className="mt-3 text-[15px] text-mid leading-relaxed">
-          Karya tulis ilmiah mahasiswa Universitas Gadjah Mada (UGM) Yogyakarta dalam ajang Kamakarya Essay Competition (KEC) 2026.
+          Karya tulis ilmiah mahasiswa Universitas Gadjah Mada (UGM) Yogyakarta dalam ajang National Ercom Competition 2026.
         </p>
       </div>
 

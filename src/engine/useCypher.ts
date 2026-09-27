@@ -64,7 +64,7 @@ export function useCypher() {
     {
       id: 'c-welcome',
       role: 'assistant',
-      content: `**Selamat datang di Sistem Ruang Kendali CYPHER.**\n\nSistem mengintegrasikan 3 modul inti:\n1. **TEG Waste Heat Harvester** (Konversi Seebeck $P = 0.52\\Delta T + 0.08$)\n2. **Advanced Dry Filtration** (Reduksi CO hingga 28 ppm dan $\\text{CO}_2$ hingga 3.0%)\n3. **CEMS IoT Closed-Loop Controller** (Sensor ENS160 & AHT21 $\\rightarrow$ Arduino Nano $\\rightarrow$ ESP32).\n\nSilakan ajukan analisis operasional, lakukan pengujian filtrasi, atau picu modul pemulihan.`,
+      content: `**Selamat datang di Sistem Ruang Kendali NEXUS.**\n\nSistem mengintegrasikan 3 modul inti:\n1. **TEG Waste Heat Harvester** (Konversi Seebeck $P = 0.52\\Delta T + 0.08$)\n2. **Advanced Dry Filtration** (Reduksi CO hingga 28 ppm dan $\\text{CO}_2$ hingga 3.0%)\n3. **CEMS IoT Closed-Loop Controller** (Sensor ENS160 & AHT21 $\\rightarrow$ Arduino Nano $\\rightarrow$ ESP32).\n\nSilakan ajukan analisis operasional, lakukan pengujian filtrasi, atau picu modul pemulihan.`,
       timestamp: new Date().toLocaleTimeString('id-ID'),
     },
   ]);
@@ -119,7 +119,7 @@ export function useCypher() {
     setFilterActive(nextState);
 
     if (nextState) {
-      addLog('SMART_FILTER', 'SUCCESS', 'Modul Filtrasi Cerdas CYPHER diaktifkan. Penangkapan CO & CO2 berjalan simultan.');
+      addLog('SMART_FILTER', 'SUCCESS', 'Modul Filtrasi Cerdas NEXUS diaktifkan. Penangkapan CO & CO2 berjalan simultan.');
     } else {
       playAlarm();
       addLog('SMART_FILTER', 'ALERT', 'PERINGATAN: Filter dibypass! Gas buang mentah mengalir langsung ke cerobong.');
@@ -391,15 +391,15 @@ function generateCopilotAnswer(prompt: string, state: ScadaSystemState): Copilot
   let content = '';
 
   if (p.includes('teg') || p.includes('seebeck') || p.includes('daya') || p.includes('regresi') || p.includes('panas')) {
-    content = `### Analisis Pemanenan Energi Termoelektrik (TEG)\n\nBerdasarkan data penelitian CYPHER 2026:\n- **Formula Regresi Empiris**: P = 0.52 ΔT + 0.08 dengan koefisien determinasi R² = 0.94.\n- **Hasil Uji Prototipe (TEC1-12706)**: Menghasilkan daya rata-rata **3.2 – 4.4 W** pada gradien suhu ΔT sebesar **6.5 – 8.2°C**, dengan tegangan stabil **2.0 – 2.5 V**.\n- **Status Operasional Saat Ini**: ΔT = ${state.teg.deltaT}°C menghasilkan daya aktual **${state.teg.power} ${state.teg.powerUnit}**.\n- **Keunggulan**: Sistem solid-state tanpa komponen bergerak, andal, dan memanfaatkan limbah flue gas tanpa mengganggu proses peleburan.`;
+    content = `### Analisis Pemanenan Energi Termoelektrik (TEG)\n\nBerdasarkan data penelitian NEXUS 2026:\n- **Formula Regresi Empiris**: P = 0.52 ΔT + 0.08 dengan koefisien determinasi R² = 0.94.\n- **Hasil Uji Prototipe (TEC1-12706)**: Menghasilkan daya rata-rata **3.2 – 4.4 W** pada gradien suhu ΔT sebesar **6.5 – 8.2°C**, dengan tegangan stabil **2.0 – 2.5 V**.\n- **Status Operasional Saat Ini**: ΔT = ${state.teg.deltaT}°C menghasilkan daya aktual **${state.teg.power} ${state.teg.powerUnit}**.\n- **Keunggulan**: Sistem solid-state tanpa komponen bergerak, andal, dan memanfaatkan limbah flue gas tanpa mengganggu proses peleburan.`;
   } else if (p.includes('filter') || p.includes('filtrasi') || p.includes('co') || p.includes('wilcoxon') || p.includes('aliran')) {
-    content = `### Analisis Kinerja Modul Filtrasi Cerdas CYPHER\n\nBerdasarkan uji statistik **Wilcoxon Signed-Rank** (p < 0.05):\n1. **Reduksi CO**: Turun signifikan rata-rata **15 ppm** (dari 45 ppm tanpa filter menjadi 28 ppm pada menit ke-45–60).\n2. **Reduksi CO₂**: Turun signifikan **1.0%** (dari 4.2% menjadi 3.0%).\n3. **Stabilitas Aerodinamika & Termal**: Modul filter terbukti **tidak menghambat aliran gas** (laju alir konstan 2.5–2.9 L/min) dan suhu gas tetap stabil di kisaran 40–48°C.\n4. **Kestabilan O₂**: Kadar O₂ stabil di kisaran 20.4%–20.8%, menandakan proses pembakaran tungku tidak terganggu.`;
+    content = `### Analisis Kinerja Modul Filtrasi Cerdas NEXUS\n\nBerdasarkan uji statistik **Wilcoxon Signed-Rank** (p < 0.05):\n1. **Reduksi CO**: Turun signifikan rata-rata **15 ppm** (dari 45 ppm tanpa filter menjadi 28 ppm pada menit ke-45–60).\n2. **Reduksi CO₂**: Turun signifikan **1.0%** (dari 4.2% menjadi 3.0%).\n3. **Stabilitas Aerodinamika & Termal**: Modul filter terbukti **tidak menghambat aliran gas** (laju alir konstan 2.5–2.9 L/min) dan suhu gas tetap stabil di kisaran 40–48°C.\n4. **Kestabilan O₂**: Kadar O₂ stabil di kisaran 20.4%–20.8%, menandakan proses pembakaran tungku tidak terganggu.`;
   } else if (p.includes('ens160') || p.includes('aht21') || p.includes('arduino') || p.includes('esp32') || p.includes('iot') || p.includes('cems')) {
     content = `### Arsitektur CEMS & IoT Closed-Loop Controller\n\n- **Sensor Endpoints**: Sensor **ENS160** (deteksi gas kualitas udara, CO, CO₂, VOC) dipadukan dengan sensor **AHT21** (pengukuran temperatur dan kelembaban presisi tinggi).\n- **Pemrosesan Mikro**: Data diakuisisi oleh **Arduino Nano** lalu ditransmisikan ke mikrokontroler **ESP32**.\n- **Loop Tertutup Adaptif**: CEMS tidak hanya mencatat kepatuhan regulasi secara pasif, tetapi bertindak sebagai otak kendali yang secara real-time menyesuaikan intensitas pemanenan TEG dan filtrasi cerdas berdasarkan fluktuasi emisi cerobong.`;
   } else if (p.includes('roadmap') || p.includes('peta jalan') || p.includes('2045') || p.includes('2060') || p.includes('bappenas') || p.includes('target')) {
     content = `### Peta Jalan Dekarbonisasi Menuju NZE 2060 & Indonesia Emas 2045\n\nSesuai Peta Jalan Dekarbonisasi Industri Nikel Nasional (Bappenas & WRI Indonesia target reduksi 81%):\n- **Tahap 1 (2026–2030)**: Validasi prototipe dan uji coba di 1 unit smelter skala industri.\n- **Tahap 2 (2030–2040)**: Pengembangan modul TEG paralel (daya 10x lipat) & filter cerdas berbasis AI/Machine Learning untuk optimasi prediktif.\n- **Tahap 3 (2040–2045)**: Integrasi jaringan pemantauan IoT nasional dan penetapan CYPHER sebagai standar kepatuhan wajib (*mandatory compliance*) bagi seluruh smelter Indonesia.`;
   } else {
-    content = `### Rekomendasi Kendali CYPHER\n\nKondisi telemetri unit **${state.unitId}**:\n- **Daya Listrik TEG**: ${state.teg.power} ${state.teg.powerUnit} (ΔT = ${state.teg.deltaT}°C)\n- **Status Emisi CEMS**: SO₂ = ${state.cems.so2}, CO = ${state.cems.co} ppm, CO₂ = ${state.cems.co2}%\n- **Efektivitas Filter**: ${state.filter.active ? 'AKTIF (Efisiensi 99.4%)' : 'BYPASS (Peringatan Emisi)'}\n\nSistem beroperasi optimal dalam kepatuhan baku mutu lingkungan.`;
+    content = `### Rekomendasi Kendali NEXUS\n\nKondisi telemetri unit **${state.unitId}**:\n- **Daya Listrik TEG**: ${state.teg.power} ${state.teg.powerUnit} (ΔT = ${state.teg.deltaT}°C)\n- **Status Emisi CEMS**: SO₂ = ${state.cems.so2}, CO = ${state.cems.co} ppm, CO₂ = ${state.cems.co2}%\n- **Efektivitas Filter**: ${state.filter.active ? 'AKTIF (Efisiensi 99.4%)' : 'BYPASS (Peringatan Emisi)'}\n\nSistem beroperasi optimal dalam kepatuhan baku mutu lingkungan.`;
   }
 
   return {

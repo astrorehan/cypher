@@ -65,14 +65,14 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
         </div>
       </div>
 
-      {/* Tengah — Wordmark CYPHER */}
+      {/* Tengah — Wordmark NEXUS */}
       <button
         onClick={() => onNavigate('landing')}
         className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 transition-opacity hover:opacity-80 cursor-pointer"
       >
         <CypherMark className="w-6 h-6 md:w-7 md:h-7" />
         <span className="font-display text-[21px] md:text-[24px] font-black tracking-[.28em] pl-[.28em] bg-gradient-to-r from-blue-700 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
-          CYPHER
+          NEXUS
         </span>
       </button>
 
@@ -92,7 +92,7 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
         {open && (
           <nav className="absolute right-0 top-[54px] w-[290px] rounded-3xl overflow-hidden glass-deep anim-pop shadow-2xl p-1.5 border border-white/60">
             <div className="px-3.5 py-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo border-b border-black/[.06] mb-1">
-              Navigasi Platform CYPHER
+              Navigasi Platform NEXUS
             </div>
             {MENU.map((m) => {
               const active = m.id === view;

@@ -432,7 +432,7 @@ export const AnalyticsCharts: React.FC<Props> = ({
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                 <span className="font-mono text-[12px] font-bold text-slate-200">
-                  OSILOSKOP TRANSIEN TELEMETRI CYPHER (STREAM REAL-TIME)
+                  OSILOSKOP TRANSIEN TELEMETRI NEXUS (STREAM REAL-TIME)
                 </span>
               </div>
               <div className="flex items-center gap-4 text-[11px] font-mono">

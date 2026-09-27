@@ -52,7 +52,7 @@ export const CypherCopilot: React.FC<Props> = ({
           </div>
           <div>
             <h3 className="font-display font-bold text-[15px] text-hi flex items-center gap-2">
-              <span>CYPHER AI Copilot &amp; Engineering Advisory</span>
+              <span>NEXUS AI Copilot &amp; Engineering Advisory</span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-core-500/10 text-core-700 font-bold border border-core-500/20">
                 UGM 2026 MODEL
               </span>
