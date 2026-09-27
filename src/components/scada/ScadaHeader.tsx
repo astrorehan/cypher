@@ -1,18 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Activity,
-  Cpu,
-  Radio,
-  Download,
-  Flame,
-  Home,
-  Sliders,
-  ShieldCheck,
-  AlertTriangle,
-  ChevronDown,
-  RefreshCw,
-  Sparkles,
-} from 'lucide-react';
+import React from 'react';
+import { Download, Home } from 'lucide-react';
 import { CypherMark } from '../brand/CypherMark';
 import { SmelterUnitId, ControlMode, ScadaSystemState } from '../../engine/cypherTypes';
 import { SMELTER_UNITS } from '../../engine/cypherData';
@@ -33,175 +20,66 @@ export const ScadaHeader: React.FC<Props> = ({
   onHome,
   onExportReport,
 }) => {
-  const [timeStr, setTimeStr] = useState<string>(new Date().toLocaleTimeString('id-ID'));
-  const [unitDropdownOpen, setUnitDropdownOpen] = useState(false);
   const { playClick } = useSound();
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeStr(new Date().toLocaleTimeString('id-ID'));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentUnit = SMELTER_UNITS.find((u) => u.id === state.unitId) || SMELTER_UNITS[0];
-
   return (
-    <div className="p-3.5 md:p-4 rounded-3xl bg-white/85 backdrop-blur-md border border-black/[.08] shadow-sm text-hi relative z-30">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        {/* Left: Brand + Smelter Unit Selector */}
-        <div className="flex items-center gap-3 md:gap-4 flex-wrap">
+    <header className="scada-panel rounded-[28px] p-4 md:px-6 md:py-4 text-hi">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-3 mr-auto">
           {onHome && (
             <button
-              onClick={() => {
-                playClick();
-                onHome();
-              }}
-              title="Kembali ke Beranda"
-              className="w-10 h-10 rounded-2xl glass-soft hover:bg-black/[.06] text-hi flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95"
+              type="button"
+              onClick={() => { playClick(); onHome(); }}
+              aria-label="Kembali ke beranda"
+              className="liquid-control w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer"
             >
               <Home className="w-4 h-4" />
             </button>
           )}
-
-          <div className="flex items-center gap-2.5">
-            <CypherMark className="w-7 h-7" />
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-black text-[16px] tracking-[0.2em] bg-gradient-to-r from-blue-700 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
-                  NEXUS
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-core-500/10 text-core-600 font-bold border border-core-500/20">
-                  SCADA LIVE
-                </span>
-              </div>
-              <p className="text-[10.5px] text-lo font-mono hidden sm:block">
-                Ruang Kendali Telemetri CEMS &amp; Pemanen TEG
-              </p>
-            </div>
+          <CypherMark className="w-8 h-8" />
+          <div>
+            <div className="font-display text-[17px] font-bold tracking-[0.1em] text-core-700">NEXUS</div>
+            <div className="text-[11px] text-mid">Ruang kendali emisi</div>
           </div>
-
-          {/* Unit Selector Dropdown */}
-          <div className="relative pl-3 border-l border-black/[.08]">
-            <button
-              onClick={() => {
-                playClick();
-                setUnitDropdownOpen((v) => !v);
-              }}
-              className="h-10 px-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-black/[.08] text-[13px] font-semibold text-hi flex items-center gap-2 transition-all cursor-pointer shadow-2xs"
-            >
-              <Flame className="w-4 h-4 text-amber-600 shrink-0" />
-              <span className="max-w-[180px] sm:max-w-[240px] truncate">
-                {currentUnit.name}
-              </span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-lo transition-transform ${
-                  unitDropdownOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
-
-            {unitDropdownOpen && (
-              <div className="absolute left-3 top-12 w-84 rounded-3xl bg-white/95 backdrop-blur-xl border border-black/[.08] shadow-2xl p-2 z-50 anim-pop">
-                <div className="px-3 py-1.5 text-[10.5px] font-mono font-bold uppercase tracking-wider text-lo border-b border-black/[.06] mb-1">
-                  Pilih Unit Smelter Target
-                </div>
-                {SMELTER_UNITS.map((unit) => {
-                  const isSelected = unit.id === state.unitId;
-                  return (
-                    <button
-                      key={unit.id}
-                      onClick={() => {
-                        playClick();
-                        onSelectUnit(unit.id);
-                        setUnitDropdownOpen(false);
-                      }}
-                      className={`w-full p-2.5 rounded-2xl text-left transition-all mb-1 cursor-pointer flex flex-col ${
-                        isSelected
-                          ? 'bg-core-500/10 text-core-700 border border-core-500/30 font-semibold'
-                          : 'hover:bg-black/[.04] text-mid'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between text-[13px]">
-                        <span className="font-semibold text-hi">{unit.name}</span>
-                        {unit.isLabPrototype && (
-                          <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 font-bold">
-                            ESAI UGM
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[11px] text-lo truncate mt-0.5">
-                        {unit.type} • {unit.capacity}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <span className="rounded-full bg-amber-50/90 border border-amber-200 px-2.5 py-1 text-[11px] font-semibold text-amber-800">Simulasi</span>
         </div>
 
-        {/* Right: Mode Switcher + IoT Sync + Actions */}
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {/* Mode Switcher */}
-          <div className="flex items-center bg-black/[.04] p-1 rounded-2xl border border-black/[.06] text-[12px] font-semibold">
-            <button
-              onClick={() => {
-                playClick();
-                onSetControlMode('AUTO_CLOSED_LOOP');
-              }}
-              className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
-                state.controlMode === 'AUTO_CLOSED_LOOP'
-                  ? 'bg-core-500 text-white font-bold shadow-sm'
-                  : 'text-mid hover:text-hi'
-              }`}
+        <div className="grid grid-cols-2 xl:grid-cols-[minmax(240px,280px)_minmax(130px,1fr)_auto] items-end gap-3 w-full xl:w-auto">
+          <label className="col-span-2 xl:col-span-1 flex flex-col gap-1 text-[12px] font-medium text-mid min-w-0">
+            Unit dipantau
+            <select
+              value={state.unitId}
+              onChange={(event) => { playClick(); onSelectUnit(event.target.value as SmelterUnitId); }}
+              className="liquid-control w-full h-11 rounded-xl px-3 text-[13px] font-semibold text-hi cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Closed-Loop</span>
-            </button>
-            <button
-              onClick={() => {
-                playClick();
-                onSetControlMode('MANUAL_OVERRIDE');
-              }}
-              className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
-                state.controlMode === 'MANUAL_OVERRIDE'
-                  ? 'bg-amber-500 text-white font-bold shadow-sm'
-                  : 'text-mid hover:text-hi'
-              }`}
+              {SMELTER_UNITS.map((unit) => <option key={unit.id} value={unit.id}>{unit.name}</option>)}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1 text-[12px] font-medium text-mid min-w-0">
+            Mode kendali
+            <select
+              value={state.controlMode}
+              onChange={(event) => { playClick(); onSetControlMode(event.target.value as ControlMode); }}
+              className="liquid-control w-full h-11 rounded-xl px-3 text-[13px] font-semibold text-hi cursor-pointer"
             >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>Manual Override</span>
-            </button>
-          </div>
+              <option value="AUTO_CLOSED_LOOP">Otomatis</option>
+              <option value="MANUAL_OVERRIDE">Manual</option>
+              <option value="EXPERIMENTAL_BENCH">Uji lab</option>
+            </select>
+          </label>
 
-          {/* IoT Status Pill */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[11.5px] font-mono text-emerald-800">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold">ESP32 &amp; NANO SYNCED</span>
-          </div>
-
-          {/* Timestamp */}
-          <div className="hidden xl:block font-mono text-[12px] text-mid px-3 py-2 rounded-2xl bg-slate-50 border border-black/[.06]">
-            {timeStr} WIB
-          </div>
-
-          {/* Export Action */}
           {onExportReport && (
             <button
-              onClick={() => {
-                playClick();
-                onExportReport();
-              }}
-              title="Unduh Laporan Telemetri SCADA"
-              className="h-10 px-4 rounded-2xl bg-core-500 text-white hover:brightness-110 shadow-sm text-[12.5px] font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+              type="button"
+              onClick={() => { playClick(); onExportReport(); }}
+              className="primary-action h-11 px-3 md:px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Export SCADA</span>
+              <Download className="w-4 h-4" /> Unduh CSV
             </button>
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 };

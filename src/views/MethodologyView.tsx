@@ -74,12 +74,12 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
   const calculatedPower = calculatePredictedPower(deltaT, isLab);
 
   return (
-    <div className="min-h-full flex flex-col p-6 md:p-10 max-w-6xl mx-auto w-full anim-rise">
+    <div className="min-h-full flex flex-col p-5 md:p-10 max-w-6xl mx-auto w-full anim-rise">
       {/* Navigation Header */}
-      <div className="flex items-center justify-between gap-4 mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-10">
         <button
           onClick={() => onNavigate('landing')}
-          className="h-10 px-4 rounded-full glass-soft hover:bg-white text-hi shadow-sm flex items-center gap-2 text-[13px] font-semibold transition-all cursor-pointer"
+          className="liquid-control min-h-11 px-4 rounded-2xl text-hi flex items-center gap-2 text-[13px] font-semibold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Beranda</span>
@@ -87,7 +87,7 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
 
         <button
           onClick={() => onNavigate('simulasi')}
-          className="h-10 px-5 rounded-full bg-core-500 text-white text-[13px] font-bold shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+          className="primary-action min-h-11 px-5 rounded-2xl text-[13px] font-semibold cursor-pointer"
         >
           Buka Ruang Kontrol Smelter
         </button>
@@ -95,13 +95,13 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
 
       {/* Page Title */}
       <div className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 font-mono text-[11px] font-bold mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 eyebrow mb-4">
           LANDASAN SAINS &amp; METODOLOGI REKAYASA
         </div>
-        <h1 className="font-display text-[32px] md:text-[42px] font-extrabold text-hi leading-tight">
+        <h1 className="page-title text-[34px] md:text-[48px] text-hi">
           Arsitektur Integrasi Sistem NEXUS
         </h1>
-        <p className="mt-3 text-[15px] text-mid leading-relaxed">
+        <p className="mt-4 text-[15px] md:text-[16px] text-mid leading-relaxed">
           Mengintegrasikan pemulihan limbah panas (TEG), penyaringan polutan cerdas, dan Continuous Emission Monitoring System (CEMS) berbasis IoT ke dalam satu ekosistem kendali loop tertutup.
         </p>
       </div>
@@ -113,7 +113,7 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
           return (
             <div
               key={i}
-              className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-all"
+              className="p-6 rounded-3xl surface-card flex flex-col justify-between hover:shadow-md transition-shadow"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -125,10 +125,10 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
                     <Icon className="w-5 h-5" />
                   </span>
                 </div>
-                <h3 className="font-display text-[17px] font-bold text-hi mb-2">
+                <h3 className="section-title text-[18px] text-hi mb-2">
                   {mod.name}
                 </h3>
-                <p className="text-[13px] text-mid leading-relaxed mb-6">
+                <p className="text-[14px] text-mid leading-relaxed mb-6">
                   {mod.body}
                 </p>
               </div>
@@ -142,14 +142,14 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
       </div>
 
       {/* Interactive Mathematical Model Calculator */}
-      <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-md mb-12">
+      <div className="p-5 md:p-8 rounded-3xl surface-card mb-12">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 text-cyan-600 font-mono text-[11px] font-bold uppercase mb-1">
               <Calculator className="w-4 h-4" />
               <span>Model Matematis &amp; Simulasi Prediktif</span>
             </div>
-            <h2 className="font-display text-[22px] font-extrabold text-hi">
+            <h2 className="section-title text-[22px] md:text-[25px] text-hi">
               Kalkulator Konversi Daya Listrik Termoelektrik
             </h2>
             <p className="text-[13px] text-mid">
@@ -157,14 +157,14 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl text-[12px] font-semibold">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center surface-inset p-1 rounded-xl text-[12px] font-semibold">
               <button
                 onClick={() => {
                   setScaleMode('lab');
                   setDeltaT(7.5);
                 }}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                className={`px-3 py-2 rounded-lg transition-all cursor-pointer ${
                   isLab ? 'bg-white text-slate-900 shadow-sm font-bold' : 'text-slate-600'
                 }`}
               >
@@ -175,7 +175,7 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
                   setScaleMode('industrial');
                   setDeltaT(370);
                 }}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                className={`px-3 py-2 rounded-lg transition-all cursor-pointer ${
                   !isLab ? 'bg-white text-slate-900 shadow-sm font-bold' : 'text-slate-600'
                 }`}
               >
@@ -204,15 +204,17 @@ export const MethodologyView: React.FC<Props> = ({ onNavigate }) => {
             <span className="font-mono text-cyan-600 font-bold">{deltaT.toFixed(1)} °C</span>
           </div>
           <input
+            aria-label="Perbedaan temperatur"
             type="range"
             min={isLab ? 1 : 50}
             max={isLab ? 20 : 500}
             step={isLab ? 0.1 : 5}
             value={deltaT}
             onChange={(e) => setDeltaT(Number(e.target.value))}
-            className="w-full accent-cyan-600 cursor-pointer"
+            className="liquid-range my-4"
+            style={{ '--range-color': '#0891b2', '--range-fill': `${((deltaT - (isLab ? 1 : 50)) / ((isLab ? 20 : 500) - (isLab ? 1 : 50))) * 100}%` } as React.CSSProperties}
           />
-          <div className="flex justify-between text-[11px] font-mono text-slate-500 mt-1">
+          <div className="flex flex-wrap justify-between gap-2 text-[11px] font-mono text-slate-500 mt-1">
             <span>{isLab ? 'ΔT Minimum (1°C)' : 'ΔT Rendah (50°C)'}</span>
             <span>{isLab ? 'Rentang Uji Esai (6,5–8,2°C)' : 'Titik Operasi Standar (370°C)'}</span>
             <span>{isLab ? 'ΔT Maksimal (20°C)' : 'Thermal Peak (500°C)'}</span>

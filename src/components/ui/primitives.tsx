@@ -52,9 +52,9 @@ export const GhostButton: React.FC<{
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`h-11 px-5 rounded-2xl text-[13.5px] font-medium text-mid glass-soft backdrop-blur-md cursor-pointer
+    className={`liquid-control h-11 px-5 rounded-2xl text-[13.5px] font-medium text-mid cursor-pointer
       inline-flex items-center justify-center gap-2 transition-all duration-200
-      hover:bg-black/[.07] hover:text-hi active:scale-[.985] disabled:opacity-40 disabled:cursor-not-allowed ${className}`}
+      hover:text-hi active:scale-[.985] disabled:opacity-40 disabled:cursor-not-allowed ${className}`}
   >
     {children}
   </button>

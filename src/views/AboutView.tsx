@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, GraduationCap, Plus, Quote, Sparkles, Award } from 'lucide-react';
 import { SiteView } from '../engine/cypherTypes';
 import { Chip } from '../components/ui/primitives';
@@ -65,84 +65,11 @@ const COMPETITION_INFO = {
 
 const MemberCard: React.FC<{
   member: Member;
-  index: number;
   open: boolean;
   onToggle: () => void;
-}> = ({ member, index, open, onToggle }) => {
-  const frameRef = useRef<HTMLDivElement>(null);
-  const target = useRef({ x: 0, y: 0, mx: 50, my: 50 });
-  const shown = useRef({ x: 0, y: 0, mx: 50, my: 50 });
-  const raf = useRef<number | null>(null);
-
-  const tick = useCallback(() => {
-    const t = target.current;
-    const s = shown.current;
-    const k = 0.14;
-
-    s.x += (t.x - s.x) * k;
-    s.y += (t.y - s.y) * k;
-    s.mx += (t.mx - s.mx) * k;
-    s.my += (t.my - s.my) * k;
-
-    const el = frameRef.current;
-    if (el) {
-      el.style.transform = `perspective(1100px) rotateX(${s.x.toFixed(3)}deg) rotateY(${s.y.toFixed(3)}deg)`;
-      el.style.setProperty('--mx', `${s.mx.toFixed(2)}%`);
-      el.style.setProperty('--my', `${s.my.toFixed(2)}%`);
-    }
-
-    if (
-      Math.abs(t.x - s.x) > 0.01 ||
-      Math.abs(t.y - s.y) > 0.01 ||
-      Math.abs(t.mx - s.mx) > 0.05 ||
-      Math.abs(t.my - s.my) > 0.05
-    ) {
-      raf.current = requestAnimationFrame(tick);
-    } else {
-      raf.current = null;
-    }
-  }, []);
-
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = frameRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-
-    target.current = {
-      x: -ny * 12,
-      y: nx * 12,
-      mx: ((e.clientX - rect.left) / rect.width) * 100,
-      my: ((e.clientY - rect.top) / rect.height) * 100,
-    };
-
-    if (raf.current === null) raf.current = requestAnimationFrame(tick);
-  };
-
-  const onMouseLeave = () => {
-    target.current = { x: 0, y: 0, mx: 50, my: 50 };
-    if (raf.current === null) raf.current = requestAnimationFrame(tick);
-  };
-
+}> = ({ member, open, onToggle }) => {
   return (
-    <div
-      className="anim-bob anim-bob-hold flex flex-col"
-      style={{ animationDelay: `${index * 0.7}s` }}
-    >
-      <div
-        ref={frameRef}
-        onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
-        onClick={onToggle}
-        className="relative flex-1 rounded-3xl p-6 bg-white border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
-      >
-        <div
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, ${member.tint} 15%, transparent), transparent 70%)`,
-          }}
-        />
+    <div className="rounded-3xl p-6 surface-card flex flex-col justify-between">
 
         <div>
           {/* Avatar Icon */}
@@ -157,11 +84,10 @@ const MemberCard: React.FC<{
             </div>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggle();
-              }}
-              className="w-8 h-8 rounded-full glass-soft flex items-center justify-center text-lo hover:text-hi"
+              onClick={onToggle}
+              className="w-10 h-10 rounded-full liquid-control flex items-center justify-center text-lo hover:text-hi"
+              aria-label={open ? `Tutup profil ${member.name}` : `Buka profil ${member.name}`}
+              aria-expanded={open}
             >
               <Plus className={`w-4 h-4 transition-transform duration-300 ${open ? 'rotate-45' : ''}`} />
             </button>
@@ -189,7 +115,6 @@ const MemberCard: React.FC<{
             </Chip>
           ))}
         </div>
-      </div>
     </div>
   );
 };
@@ -198,12 +123,12 @@ export const AboutView: React.FC<Props> = ({ onNavigate }) => {
   const [openCard, setOpenCard] = useState<number | null>(null);
 
   return (
-    <div className="min-h-full flex flex-col p-6 md:p-10 max-w-6xl mx-auto w-full anim-rise">
+    <div className="min-h-full flex flex-col p-5 md:p-10 max-w-6xl mx-auto w-full anim-rise">
       {/* Top Header */}
-      <div className="flex items-center justify-between gap-4 mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-10">
         <button
           onClick={() => onNavigate('landing')}
-          className="h-10 px-4 rounded-full glass-soft hover:bg-white text-hi shadow-sm flex items-center gap-2 text-[13px] font-semibold transition-all cursor-pointer"
+          className="liquid-control min-h-11 px-4 rounded-2xl text-hi flex items-center gap-2 text-[13px] font-semibold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Beranda</span>
@@ -211,7 +136,7 @@ export const AboutView: React.FC<Props> = ({ onNavigate }) => {
 
         <button
           onClick={() => onNavigate('simulasi')}
-          className="h-10 px-5 rounded-full bg-core-500 text-white text-[13px] font-bold shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+          className="primary-action min-h-11 px-5 rounded-2xl text-[13px] font-semibold cursor-pointer"
         >
           Buka Ruang Kontrol Smelter
         </button>
@@ -219,20 +144,20 @@ export const AboutView: React.FC<Props> = ({ onNavigate }) => {
 
       {/* Page Title */}
       <div className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 font-mono text-[11px] font-bold mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 eyebrow mb-4">
           TIM PENELITI &amp; INOVASI NEXUS UGM
         </div>
-        <h1 className="font-display text-[32px] md:text-[42px] font-extrabold text-hi leading-tight">
+        <h1 className="page-title text-[34px] md:text-[48px] text-hi">
           Penulis &amp; Pengembang Gagasan NEXUS
         </h1>
-        <p className="mt-3 text-[15px] text-mid leading-relaxed">
+        <p className="mt-4 text-[15px] md:text-[16px] text-mid leading-relaxed">
           Karya tulis ilmiah mahasiswa Universitas Gadjah Mada (UGM) Yogyakarta dalam ajang National Ercom Competition 2026.
         </p>
       </div>
 
       {/* Competition Context Banner Card */}
       <div className="max-w-3xl mx-auto w-full mb-10">
-        <div className="p-6 rounded-3xl bg-white border border-emerald-500/30 shadow-md flex flex-col sm:flex-row items-center sm:items-start gap-5 border-l-4 border-l-emerald-500">
+        <div className="p-6 rounded-3xl surface-card flex flex-col sm:flex-row items-center sm:items-start gap-5 border-l-4 border-l-emerald-500">
           <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-700 font-display text-[22px] font-extrabold flex items-center justify-center shrink-0 shadow-inner">
             UGM
           </div>
@@ -257,7 +182,6 @@ export const AboutView: React.FC<Props> = ({ onNavigate }) => {
           <MemberCard
             key={idx}
             member={m}
-            index={idx}
             open={openCard === idx}
             onToggle={() => setOpenCard(openCard === idx ? null : idx)}
           />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DotField } from './components/site/DotField';
 import { SiteHeader } from './components/site/SiteHeader';
 import { LandingView } from './views/LandingView';
@@ -13,6 +13,10 @@ import { SoundProvider } from './utils/SoundProvider';
 export default function App() {
   const [view, setView] = useState<SiteView>('landing');
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [view]);
+
   return (
     <SoundProvider>
       <div className="min-h-screen w-full flex flex-col bg-stage relative overflow-x-hidden">
@@ -25,7 +29,7 @@ export default function App() {
           }}
         />
 
-        <DotField />
+        <DotField className="opacity-35" />
 
         <SiteHeader view={view} onNavigate={setView} />
 

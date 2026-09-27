@@ -37,14 +37,14 @@ export function useCypher() {
       timestamp: new Date().toLocaleTimeString('id-ID'),
       source: 'CEMS_IOT',
       level: 'SUCCESS',
-      message: 'Node IoT ESP32 & sensor ENS160/AHT21 tersinkronisasi via protokol MQTT/WebSockets.',
+      message: 'Sesi simulasi CEMS dimulai. Pembacaan gas diperbarui otomatis.',
     },
     {
       id: 'log-2',
       timestamp: new Date().toLocaleTimeString('id-ID'),
       source: 'TEG_HARVESTER',
       level: 'INFO',
-      message: 'Sirkuit pemanen termoelektrik Seebeck beroperasi normal pada status loop tertutup adaptif.',
+      message: 'Modul pemanen termoelektrik siap untuk simulasi operasi.',
     },
   ]);
 
@@ -75,13 +75,14 @@ export function useCypher() {
   });
 
   // Oscilloscope waveform buffers
-  const [powerWaveform, setPowerWaveform] = useState<number[]>([3.4, 3.6, 3.8, 4.1, 4.3, 4.4]);
-  const [coWaveform, setCoWaveform] = useState<number[]>([22, 24, 25, 24, 26, 28]);
-  const [co2Waveform, setCo2Waveform] = useState<number[]>([2.5, 2.6, 2.7, 2.8, 2.9, 3.0]);
+  const [powerWaveform, setPowerWaveform] = useState<number[]>(() => Array(6).fill(telemetry.teg.power));
+  const [coWaveform, setCoWaveform] = useState<number[]>(() => Array(6).fill(telemetry.cems.co));
+  const [co2Waveform, setCo2Waveform] = useState<number[]>(() => Array(6).fill(telemetry.cems.co2));
+  const waveformUnitRef = useRef(unitId);
 
   // Update telemetry continuously
   useEffect(() => {
-    const interval = setInterval(() => {
+    const update = () => {
       const updated = generateTelemetry(
         unitId,
         filterActive,
@@ -92,10 +93,19 @@ export function useCypher() {
       );
       setTelemetry(updated);
 
-      setPowerWaveform((prev) => [...prev.slice(1), updated.teg.power]);
-      setCoWaveform((prev) => [...prev.slice(1), updated.cems.co]);
-      setCo2Waveform((prev) => [...prev.slice(1), updated.cems.co2]);
-    }, 2000);
+      if (waveformUnitRef.current !== unitId) {
+        waveformUnitRef.current = unitId;
+        setPowerWaveform(Array(6).fill(updated.teg.power));
+        setCoWaveform(Array(6).fill(updated.cems.co));
+        setCo2Waveform(Array(6).fill(updated.cems.co2));
+      } else {
+        setPowerWaveform((prev) => [...prev.slice(1), updated.teg.power]);
+        setCoWaveform((prev) => [...prev.slice(1), updated.cems.co]);
+        setCo2Waveform((prev) => [...prev.slice(1), updated.cems.co2]);
+      }
+    };
+    update();
+    const interval = setInterval(update, 2000);
 
     return () => clearInterval(interval);
   }, [unitId, filterActive, backwashActive, coolantRate, flueHeatOffset, controlMode]);

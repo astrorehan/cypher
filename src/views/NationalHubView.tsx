@@ -27,7 +27,7 @@ export interface RegionNode {
 export const REGIONS: RegionNode[] = [
   {
     id: 'morowali',
-    name: 'Morowali Hub IWIP',
+    name: 'Morowali Hub IMIP',
     sub: 'PT Indonesia Morowali Industrial Park (Nikel RKEF & HPAL)',
     lat: -2.816,
     lng: 122.152,
@@ -42,8 +42,8 @@ export const REGIONS: RegionNode[] = [
   },
   {
     id: 'weda',
-    name: 'Weda Bay IMIP',
-    sub: 'Kawasan Industri Halmahera Tengah (Smelter Ferronickel)',
+    name: 'Weda Bay IWIP',
+    sub: 'Indonesia Weda Bay Industrial Park (Smelter Ferronickel)',
     lat: 0.485,
     lng: 127.876,
     so2: 110,
@@ -139,12 +139,12 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
       minZoom: 4,
       maxZoom: 15,
       zoomControl: false,
-      attributionControl: false,
+      attributionControl: true,
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
     mapInstanceRef.current = map;
@@ -166,7 +166,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
       const marker = L.marker([region.lat, region.lng], { icon: customIcon }).addTo(map);
 
       marker.bindPopup(`
-        <div style="font-family: 'Inter', sans-serif; padding: 4px; min-width: 180px;">
+        <div style="font-family: 'Inter Variable', sans-serif; padding: 4px; min-width: 180px;">
           <div style="font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase; margin-bottom: 2px;">
             NEXUS EMISSION NODE
           </div>
@@ -260,45 +260,50 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-full flex flex-col p-6 md:p-10 bg-transparent text-hi anim-rise">
+    <div className="min-h-full flex flex-col p-5 md:p-10 bg-transparent text-hi anim-rise">
       {/* Top Bar Navigation */}
-      <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 mb-8">
+      <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 mb-8">
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('landing')}
-            className="h-10 px-4 rounded-full glass-soft hover:bg-white text-hi shadow-sm flex items-center gap-2 text-[13px] font-semibold transition-all cursor-pointer"
+            className="liquid-control min-h-11 px-4 rounded-2xl text-hi flex items-center gap-2 text-[13px] font-semibold cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali ke Beranda</span>
           </button>
 
-          <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 font-mono text-[11px] font-bold">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-            PETA INTERAKTIF EMISI LEAFLET • INDONESIA EMAS 2045
+          <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-700 eyebrow">
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
+            Peta interaktif · data simulasi
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => onNavigate('simulasi')}
-            className="h-10 px-5 rounded-full bg-gradient-to-r from-core-500 to-cyan-600 text-white text-[13px] font-bold shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+            className="primary-action min-h-11 px-5 rounded-2xl text-[13px] font-semibold cursor-pointer"
           >
             Buka Simulasi Smelter
           </button>
         </div>
       </div>
 
+      <div className="max-w-7xl mx-auto w-full mb-7">
+        <h1 className="page-title text-[34px] md:text-[48px] text-hi">Peta emisi nasional</h1>
+        <p className="mt-3 text-[15px] md:text-[16px] text-mid max-w-2xl leading-relaxed">Jelajahi enam kawasan smelter dan bandingkan indikator emisi pada skenario simulasi NEXUS.</p>
+      </div>
+
       {/* Main Layout Grid */}
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column (7 cols): Fully Interactive Leaflet Map */}
-        <div className="lg:col-span-7 rounded-3xl p-6 border border-black/[.08] glass shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-7 rounded-3xl p-5 md:p-6 surface-card flex flex-col justify-between">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
-              <h2 className="font-display text-[20px] font-extrabold leading-tight text-hi">
-                Pemetaan Smelter Nasional &amp; Makro Emisi Real-Time
+              <h2 className="section-title text-[20px] text-hi">
+                Sebaran kawasan smelter
               </h2>
               <p className="text-[12.5px] text-mid mt-0.5">
-                Peta Leaflet interaktif: Geser, perbesar (zoom), atau klik node geo-lokasi untuk inspeksi detail.
+                Geser atau perbesar peta, lalu pilih kawasan untuk melihat rinciannya.
               </p>
             </div>
 
@@ -307,24 +312,24 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
               <button
                 onClick={handleZoomIn}
                 title="Perbesar Peta"
-                className="w-8 h-8 rounded-xl glass-soft hover:bg-white flex items-center justify-center text-hi shadow-sm transition-all cursor-pointer"
+                className="w-10 h-10 rounded-xl liquid-control flex items-center justify-center text-hi cursor-pointer"
               >
                 <ZoomIn className="w-4 h-4" />
               </button>
               <button
                 onClick={handleZoomOut}
                 title="Perkecil Peta"
-                className="w-8 h-8 rounded-xl glass-soft hover:bg-white flex items-center justify-center text-hi shadow-sm transition-all cursor-pointer"
+                className="w-10 h-10 rounded-xl liquid-control flex items-center justify-center text-hi cursor-pointer"
               >
                 <ZoomOut className="w-4 h-4" />
               </button>
               <button
                 onClick={handleResetView}
                 title="Reset Tampilan Indonesia"
-                className={`h-8 px-3 rounded-xl flex items-center gap-1.5 text-[11.5px] font-semibold transition-all cursor-pointer ${
+                className={`min-h-10 px-3 rounded-xl flex items-center gap-1.5 text-[12px] font-semibold transition-all cursor-pointer ${
                   selectedRegion === null
                     ? 'bg-core-500 text-white shadow-sm'
-                    : 'glass-soft hover:bg-white text-hi shadow-sm'
+                    : 'liquid-control text-hi'
                 }`}
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -345,7 +350,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
               className={`h-8 px-3 rounded-xl text-[12px] font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
                 selectedRegion === null
                   ? 'bg-core-500 text-white shadow-sm font-bold'
-                  : 'glass-soft text-mid hover:text-hi hover:bg-white'
+                  : 'liquid-control text-mid hover:text-hi'
               }`}
             >
               <span>🌐 Seluruh Indonesia</span>
@@ -363,7 +368,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
                   className={`h-8 px-3 rounded-xl text-[12px] font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-core-500 text-white shadow-sm font-bold'
-                      : 'glass-soft text-mid hover:text-hi hover:bg-white'
+                      : 'liquid-control text-mid hover:text-hi'
                   }`}
                 >
                   <span
@@ -379,7 +384,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
         </div>
 
         {/* Right Column (5 cols): Regional / National Aggregate Analytics Card */}
-        <div className="lg:col-span-5 rounded-3xl p-6 border border-black/[.08] glass shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-5 rounded-3xl p-5 md:p-6 surface-card flex flex-col justify-between">
           {selectedRegion ? (
             <div>
               <div className="mb-4 pb-4 border-b border-black/[.08]">
@@ -394,7 +399,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
                     ← Lihat Rekap Nasional
                   </button>
                 </div>
-                <h3 className="font-display text-[22px] font-extrabold text-hi mt-1">
+                <h3 className="section-title text-[23px] text-hi mt-1">
                   {selectedRegion.name}
                 </h3>
                 <p className="text-[12px] text-mid mt-0.5">{selectedRegion.sub}</p>
@@ -403,27 +408,27 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
               {/* Macro Emission 3-Box Grid */}
               <div className="grid grid-cols-3 gap-2.5 mb-6 text-center">
                 <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                  <div className="text-[10px] font-bold text-amber-700 uppercase">Paparan SO₂</div>
+                  <div className="text-[11px] font-semibold text-amber-700">Paparan SO₂</div>
                   <div className="font-display text-[18px] font-extrabold text-amber-800 font-mono mt-0.5">
                     {selectedRegion.so2}
                   </div>
-                  <div className="text-[9px] text-lo">mg/Nm³</div>
+                  <div className="text-[10px] text-mid">mg/Nm³</div>
                 </div>
 
                 <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
-                  <div className="text-[10px] font-bold text-cyan-700 uppercase">Paparan CO</div>
+                  <div className="text-[11px] font-semibold text-cyan-700">Paparan CO</div>
                   <div className="font-display text-[18px] font-extrabold text-cyan-800 font-mono mt-0.5">
                     {selectedRegion.co}
                   </div>
-                  <div className="text-[9px] text-lo">ppm</div>
+                  <div className="text-[10px] text-mid">ppm</div>
                 </div>
 
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                  <div className="text-[10px] font-bold text-emerald-700 uppercase">Paparan CO₂</div>
+                  <div className="text-[11px] font-semibold text-emerald-700">Paparan CO₂</div>
                   <div className="font-display text-[18px] font-extrabold text-emerald-800 font-mono mt-0.5">
                     {selectedRegion.co2}
                   </div>
-                  <div className="text-[9px] text-lo">ppm</div>
+                  <div className="text-[10px] text-mid">ppm</div>
                 </div>
               </div>
 
@@ -472,7 +477,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
                 <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-600 mb-1">
                   Konsolidasi Emisi Smelter Nasional
                 </div>
-                <h3 className="font-display text-[22px] font-extrabold text-hi">
+                <h3 className="section-title text-[23px] text-hi">
                   Agregat Hub Emisi Indonesia 2045
                 </h3>
                 <p className="text-[12px] text-mid mt-0.5">
@@ -483,27 +488,27 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
               {/* National Aggregate Macro Grid */}
               <div className="grid grid-cols-3 gap-2.5 mb-6 text-center">
                 <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                  <div className="text-[10px] font-bold text-amber-700 uppercase">Rata-Rata SO₂</div>
+                  <div className="text-[11px] font-semibold text-amber-700">Rata-rata SO₂</div>
                   <div className="font-display text-[18px] font-extrabold text-amber-800 font-mono mt-0.5">
                     118.0
                   </div>
-                  <div className="text-[9px] text-lo">mg/Nm³ (Aman)</div>
+                  <div className="text-[10px] text-mid">mg/Nm³ (Aman)</div>
                 </div>
 
                 <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
-                  <div className="text-[10px] font-bold text-cyan-700 uppercase">Rata-Rata CO</div>
+                  <div className="text-[11px] font-semibold text-cyan-700">Rata-rata CO</div>
                   <div className="font-display text-[18px] font-extrabold text-cyan-800 font-mono mt-0.5">
                     31.7
                   </div>
-                  <div className="text-[9px] text-lo">ppm</div>
+                  <div className="text-[10px] text-mid">ppm</div>
                 </div>
 
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                  <div className="text-[10px] font-bold text-emerald-700 uppercase">Rata-Rata CO₂</div>
+                  <div className="text-[11px] font-semibold text-emerald-700">Rata-rata CO₂</div>
                   <div className="font-display text-[18px] font-extrabold text-emerald-800 font-mono mt-0.5">
                     266.5
                   </div>
-                  <div className="text-[9px] text-lo">ppm</div>
+                  <div className="text-[10px] text-mid">ppm</div>
                 </div>
               </div>
 
@@ -546,7 +551,7 @@ export const NationalHubView: React.FC<Props> = ({ onNavigate }) => {
               </div>
 
               {/* Hint Box */}
-              <div className="mt-6 p-3.5 rounded-2xl glass-soft border border-black/[.06] flex items-center gap-2.5 text-[12px] text-mid">
+              <div className="mt-6 p-3.5 rounded-2xl surface-inset flex items-center gap-2.5 text-[12px] text-mid">
                 <Info className="w-4 h-4 text-core-500 shrink-0" />
                 <span>Klik pin pada peta atau tombol lokasi untuk melihat analisis spesifik tiap smelter.</span>
               </div>

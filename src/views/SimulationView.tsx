@@ -3,15 +3,10 @@ import {
   Activity,
   BarChart3,
   Sparkles,
-  Layers,
-  ArrowLeft,
   Globe,
-  Flame,
-  FileSpreadsheet,
-  Zap,
-  Wind,
-  ShieldCheck,
-  Cpu,
+  ChevronDown,
+  SlidersHorizontal,
+  Network,
 } from 'lucide-react';
 import { useCypher } from '../engine/useCypher';
 import { ScadaHeader } from '../components/scada/ScadaHeader';
@@ -20,6 +15,7 @@ import { TelemetryGauges } from '../components/scada/TelemetryGauges';
 import { AnalyticsCharts } from '../components/scada/AnalyticsCharts';
 import { ActuatorControlPanel } from '../components/scada/ActuatorControlPanel';
 import { CypherCopilot } from '../components/scada/CypherCopilot';
+import { DashboardSummary } from '../components/scada/DashboardSummary';
 import { ToastContainer, ToastMessage } from '../components/ui/Toast';
 import { useSound } from '../utils/SoundProvider';
 
@@ -77,15 +73,27 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
 
   const handleExportScada = () => {
     playClick();
-    addToast(
-      'Laporan SCADA Diexport',
-      `Data telemetri ${currentUnit.name} tersimpan dalam format CSV / PDF untuk audit KLHK.`,
-      'success'
-    );
+    const columns = ['sumber', 'waktu_iso', 'unit', 'filter', 'co_ppm', 'co2_persen', 'so2_mg_nm3', 'pm25_ug_m3', 'daya_teg', 'satuan_daya'];
+    const values = [
+      'SIMULASI', new Date().toISOString(), currentUnit.id,
+      filterActive ? 'aktif' : 'bypass',
+      telemetry.cems.co, telemetry.cems.co2, telemetry.cems.so2, telemetry.cems.pm25,
+      telemetry.teg.power, telemetry.teg.powerUnit,
+    ];
+    const csv = [columns, values].map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+    const url = URL.createObjectURL(new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `nexus-simulasi-${currentUnit.id}-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    addToast('CSV diunduh', `Snapshot telemetri simulasi ${currentUnit.name} tersimpan.`, 'success');
   };
 
   return (
-    <main className="min-h-full flex flex-col p-4 md:p-8 space-y-6 max-w-[1600px] mx-auto w-full relative z-10 select-none text-hi anim-rise">
+    <main className="min-h-full flex flex-col p-4 md:p-8 space-y-5 max-w-[1480px] mx-auto w-full relative z-10 text-hi anim-rise">
       {/* 1. Industrial SCADA Sub-Header / Control Toolbar */}
       <ScadaHeader
         state={telemetry}
@@ -102,52 +110,54 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
       />
 
       {/* 2. Workspace Navigation Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white/85 backdrop-blur-md p-2 rounded-2xl border border-black/[.08] shadow-sm">
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+      <nav aria-label="Navigasi ruang kendali" className="liquid-bar flex flex-wrap items-center justify-between gap-3 p-2 rounded-[22px]">
+        <div className="flex flex-wrap items-center gap-1.5">
           <button
+            aria-pressed={activeTab === 'dashboard'}
             onClick={() => {
               playClick();
               setActiveTab('dashboard');
             }}
-            className={`h-10 px-4 rounded-xl text-[13px] font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`h-11 px-4 rounded-2xl text-[13px] font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'dashboard'
                 ? 'bg-core-500 text-white shadow-sm'
-                : 'text-mid hover:text-hi hover:bg-black/[.04]'
+                : 'text-mid hover:text-hi hover:bg-white/70'
             }`}
           >
             <Activity className="w-4 h-4" />
-            <span>Ruang Kontrol SCADA &amp; Digital Twin</span>
+            <span>Ikhtisar</span>
           </button>
 
           <button
+            aria-pressed={activeTab === 'charts'}
             onClick={() => {
               playClick();
               setActiveTab('charts');
             }}
-            className={`h-10 px-4 rounded-xl text-[13px] font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`h-11 px-4 rounded-2xl text-[13px] font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'charts'
                 ? 'bg-core-500 text-white shadow-sm'
-                : 'text-mid hover:text-hi hover:bg-black/[.04]'
+                : 'text-mid hover:text-hi hover:bg-white/70'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
-            <span>Data Uji Empiris Esai (UGM 2026)</span>
+            <span>Proyeksi</span>
           </button>
 
           <button
+            aria-pressed={activeTab === 'copilot'}
             onClick={() => {
               playClick();
               setActiveTab('copilot');
             }}
-            className={`h-10 px-4 rounded-xl text-[13px] font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`h-11 px-4 rounded-2xl text-[13px] font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'copilot'
                 ? 'bg-core-500 text-white shadow-sm'
-                : 'text-mid hover:text-hi hover:bg-black/[.04]'
+                : 'text-mid hover:text-hi hover:bg-white/70'
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            <span>NEXUS AI Copilot Advisory</span>
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping ml-1" />
+            <span>Asisten</span>
           </button>
         </div>
 
@@ -158,61 +168,56 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
                 playClick();
                 onNavigateToNational();
               }}
-              className="h-10 px-4 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[12.5px] font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+              className="h-11 px-4 rounded-2xl bg-white/75 hover:bg-white text-indigo-800 text-[13px] font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
             >
               <Globe className="w-4 h-4 text-indigo-600" />
-              <span className="hidden sm:inline">Hub Emisi Nasional 2045</span>
+              <span>Peta nasional</span>
             </button>
           )}
         </div>
-      </div>
+      </nav>
 
       {/* Tab 1: Full SCADA Instrumentation & Digital Twin View */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-6 anim-rise">
-          {/* Interactive Process Flow Schematic (P&ID) */}
-          <ProcessSchematic
+        <div className="space-y-4 anim-rise">
+          <DashboardSummary
             state={telemetry}
-            onTriggerBackwash={() => {
-              triggerBackwash();
-              addToast('Force Backwash Dipicu', 'Pulse-jet 6 bar diaktifkan pada chamber filter.', 'warning');
-            }}
-            onToggleFilter={() => {
-              toggleFilter();
-              addToast(
-                filterActive ? 'Filter Dibypass' : 'Filter Diaktifkan',
-                filterActive ? 'Emisi gas buang mentah mengalir langsung.' : 'Penangkapan CO & CO2 berjalan simultan.',
-                filterActive ? 'warning' : 'success'
-              );
-            }}
+            onShowForecast={() => { playClick(); setActiveTab('charts'); }}
+            onEnableFilter={() => { toggleFilter(); addToast('Filter diaktifkan', 'Telemetri akan diperbarui sesuai kondisi filter.', 'success'); }}
           />
 
-          {/* Live Telemetry Gauges & Detailed Subsystem Tables */}
-          <TelemetryGauges state={telemetry} />
+          <details className="group rounded-2xl surface-card">
+            <summary className="list-none cursor-pointer flex items-center justify-between gap-3 p-5 font-semibold text-[14px] text-hi rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-core-500/50 [&::-webkit-details-marker]:hidden">
+              <span className="flex items-center gap-3"><SlidersHorizontal className="w-5 h-5 text-core-600" /> Kendali operasi &amp; catatan kejadian</span>
+              <ChevronDown className="w-4 h-4 text-mid transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-4 pb-4">
+              <ActuatorControlPanel
+                state={telemetry}
+                coolantRate={coolantRate}
+                onCoolantChange={setCoolantRate}
+                flueHeatOffset={flueHeatOffset}
+                onFlueHeatChange={setFlueHeatOffset}
+                onTriggerBackwash={triggerBackwash}
+                onToggleFilter={toggleFilter}
+                onCalibrateSensors={calibrateSensors}
+                onApplyPreset={applyPreset}
+                onClearLogs={clearLogs}
+                logs={logs}
+              />
+            </div>
+          </details>
 
-          {/* Actuator Controls & Event Log Console */}
-          <ActuatorControlPanel
-            state={telemetry}
-            coolantRate={coolantRate}
-            onCoolantChange={setCoolantRate}
-            flueHeatOffset={flueHeatOffset}
-            onFlueHeatChange={setFlueHeatOffset}
-            onTriggerBackwash={() => {
-              triggerBackwash();
-              addToast('Force Backwash Dipicu', 'Pulse-jet 6 bar diaktifkan pada chamber filter.', 'warning');
-            }}
-            onToggleFilter={toggleFilter}
-            onCalibrateSensors={() => {
-              calibrateSensors();
-              addToast('Kalibrasi CEMS Selesai', 'Offset sensor ENS160 & AHT21 tervalidasi.', 'success');
-            }}
-            onApplyPreset={(presetId) => {
-              applyPreset(presetId);
-              addToast('Preset Diterapkan', `Parameter operasional beralih ke mode ${presetId}.`, 'info');
-            }}
-            onClearLogs={clearLogs}
-            logs={logs}
-          />
+          <details className="group rounded-2xl surface-card">
+            <summary className="list-none cursor-pointer flex items-center justify-between gap-3 p-5 font-semibold text-[14px] text-hi rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-core-500/50 [&::-webkit-details-marker]:hidden">
+              <span className="flex items-center gap-3"><Network className="w-5 h-5 text-core-600" /> Alur proses &amp; detail sensor</span>
+              <ChevronDown className="w-4 h-4 text-mid transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-4 pb-4 space-y-4">
+              <ProcessSchematic state={telemetry} onTriggerBackwash={triggerBackwash} onToggleFilter={toggleFilter} />
+              <TelemetryGauges state={telemetry} />
+            </div>
+          </details>
         </div>
       )}
 
@@ -220,26 +225,13 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
       {activeTab === 'charts' && (
         <div className="space-y-6 anim-rise">
           <AnalyticsCharts
+            state={telemetry}
             powerWaveform={powerWaveform}
             coWaveform={coWaveform}
             co2Waveform={co2Waveform}
             powerUnit={telemetry.teg.powerUnit}
           />
 
-          {/* Additional Process & Actuator Overview under Charts */}
-          <ActuatorControlPanel
-            state={telemetry}
-            coolantRate={coolantRate}
-            onCoolantChange={setCoolantRate}
-            flueHeatOffset={flueHeatOffset}
-            onFlueHeatChange={setFlueHeatOffset}
-            onTriggerBackwash={triggerBackwash}
-            onToggleFilter={toggleFilter}
-            onCalibrateSensors={calibrateSensors}
-            onApplyPreset={applyPreset}
-            onClearLogs={clearLogs}
-            logs={logs}
-          />
         </div>
       )}
 
@@ -252,12 +244,6 @@ export const SimulationView: React.FC<Props> = ({ onHome, onNavigateToNational }
             onSendMessage={sendCopilotQuery}
           />
 
-          {/* Compact Process Schematic below Copilot for Reference */}
-          <ProcessSchematic
-            state={telemetry}
-            onTriggerBackwash={triggerBackwash}
-            onToggleFilter={toggleFilter}
-          />
         </div>
       )}
 

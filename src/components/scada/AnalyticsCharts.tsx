@@ -11,9 +11,12 @@ import {
   Wind,
 } from 'lucide-react';
 import { EXPERIMENTAL_SERIES } from '../../engine/cypherData';
+import { ScadaSystemState } from '../../engine/cypherTypes';
+import { EmissionForecast } from './EmissionForecast';
 import { useSound } from '../../utils/SoundProvider';
 
 interface Props {
+  state: ScadaSystemState;
   powerWaveform: number[];
   coWaveform: number[];
   co2Waveform: number[];
@@ -21,42 +24,43 @@ interface Props {
 }
 
 export const AnalyticsCharts: React.FC<Props> = ({
+  state,
   powerWaveform,
   coWaveform,
   co2Waveform,
   powerUnit = 'W',
 }) => {
-  const [activeTab, setActiveTab] = useState<'experiment_teg' | 'experiment_cems' | 'live_stream'>('experiment_teg');
+  const [activeTab, setActiveTab] = useState<'experiment_teg' | 'experiment_cems' | 'live_stream' | 'forecast'>('forecast');
   const { playClick } = useSound();
 
   return (
-    <div className="rounded-3xl bg-white border border-black/[.08] shadow-sm p-6 space-y-6 text-hi">
+    <div className="rounded-3xl surface-card p-5 md:p-6 space-y-6 text-hi">
       {/* Top Header & Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-black/[.08]">
+      <div className="space-y-4 pb-4 border-b border-black/[.08]">
         <div>
           <div className="flex items-center gap-2 text-core-600 font-mono text-[11px] font-bold uppercase tracking-wider mb-0.5">
             <BarChart3 className="w-3.5 h-3.5" />
-            <span>Validasi Data Uji Empiris Laboratorium (UGM 2026)</span>
+            <span>Grafik &amp; Proyeksi</span>
           </div>
-          <h3 className="font-display text-[17px] font-bold text-hi">
-            Grafik Kinerja Termal, Elektrik &amp; Komparasi Filtrasi Gas
+          <h3 className="section-title text-[21px] text-hi">
+            {activeTab === 'forecast' ? 'Emisi 24–48 jam ke depan' : 'Data pengujian dan pembacaan saat ini'}
           </h3>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-2xl border border-black/[.06] text-[12px] font-semibold">
+        <div className="flex flex-wrap items-center gap-1 surface-inset p-1 rounded-xl text-[12px] font-semibold w-fit">
           <button
             onClick={() => {
               playClick();
-              setActiveTab('experiment_teg');
+              setActiveTab('forecast');
             }}
             className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
-              activeTab === 'experiment_teg'
+              activeTab === 'forecast'
                 ? 'bg-white text-hi font-bold shadow-sm'
                 : 'text-mid hover:text-hi'
             }`}
           >
-            ⚡ Data Termal &amp; Daya TEG
+            Proyeksi 24–48 jam
           </button>
           <button
             onClick={() => {
@@ -69,7 +73,20 @@ export const AnalyticsCharts: React.FC<Props> = ({
                 : 'text-mid hover:text-hi'
             }`}
           >
-            🌱 Reduksi CO &amp; CO₂ Filter
+            Uji filter
+          </button>
+          <button
+            onClick={() => {
+              playClick();
+              setActiveTab('experiment_teg');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+              activeTab === 'experiment_teg'
+                ? 'bg-white text-hi font-bold shadow-sm'
+                : 'text-mid hover:text-hi'
+            }`}
+          >
+            Uji TEG
           </button>
           <button
             onClick={() => {
@@ -82,10 +99,12 @@ export const AnalyticsCharts: React.FC<Props> = ({
                 : 'text-mid hover:text-hi'
             }`}
           >
-            📈 Osiloskop Real-Time
+            Sinyal saat ini
           </button>
         </div>
       </div>
+
+      {activeTab === 'forecast' && <EmissionForecast state={state} />}
 
       {/* Tab 1: TEG Thermal & Electrical Parameters (Gambar 1 dari Esai) */}
       {activeTab === 'experiment_teg' && (

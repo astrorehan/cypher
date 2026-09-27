@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, Check, Activity } from 'lucide-react';
+import { Menu, X, Check } from 'lucide-react';
 import { SiteView } from '../../engine/cypherTypes';
 import { SoundToggle } from '../ui/SoundToggle';
 import { CypherMark } from '../brand/CypherMark';
@@ -11,11 +11,11 @@ interface Props {
 
 const MENU: { id: SiteView; label: string; tag?: string }[] = [
   { id: 'landing', label: 'Beranda' },
-  { id: 'simulasi', label: 'Ruang Kendali Smelter (SCADA Live)', tag: 'SCADA' },
-  { id: 'nasional', label: 'Hub Emisi Smelter Nasional 2045', tag: 'Peta Geo' },
-  { id: 'metodologi', label: 'Metodologi & Landasan Sains' },
-  { id: 'profil', label: 'Profil Operator K3 & HSE' },
-  { id: 'tentang', label: 'Tentang Tim Peneliti UGM' },
+  { id: 'simulasi', label: 'Ruang kendali', tag: 'Simulasi' },
+  { id: 'nasional', label: 'Peta emisi nasional', tag: 'Peta' },
+  { id: 'metodologi', label: 'Metodologi' },
+  { id: 'profil', label: 'Profil operator' },
+  { id: 'tentang', label: 'Tentang tim' },
 ];
 
 export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
@@ -39,15 +39,15 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
   }, [open]);
 
   return (
-    <header className="relative z-30 shrink-0 h-[76px] px-6 md:px-9 flex items-center justify-between">
-      {/* Kiri — Logo Institusi UGM */}
-      <div className="flex items-center gap-2.5">
+    <header className="relative z-30 shrink-0 px-4 md:px-8 pt-4">
+      <div className="liquid-bar max-w-[1480px] mx-auto h-[68px] rounded-[24px] px-4 md:px-6 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5 min-w-0">
         <a
           href="https://ugm.ac.id/id/"
           target="_blank"
           rel="noopener noreferrer"
           title="Universitas Gadjah Mada"
-          className="inline-flex items-center justify-center p-1 rounded-xl transition-all duration-200 hover:bg-black/[.06] hover:scale-105 active:scale-95 cursor-pointer"
+          className="inline-flex items-center justify-center p-1 rounded-xl transition-colors hover:bg-black/[.04] cursor-pointer"
         >
           <img
             src="/Lambang UGM.png"
@@ -57,21 +57,19 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
           />
         </a>
 
-        <div className="hidden lg:flex items-center gap-1.5 pl-2 border-l border-slate-300/80">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[11px] font-mono font-bold text-emerald-800">
-            NET ZERO EMISSIONS 2060
-          </span>
+        <div className="hidden lg:flex items-center pl-3 border-l border-slate-200">
+          <span className="text-[12px] font-medium text-mid">Riset emisi smelter UGM</span>
         </div>
       </div>
 
       {/* Tengah — Wordmark NEXUS */}
       <button
         onClick={() => onNavigate('landing')}
-        className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 transition-opacity hover:opacity-80 cursor-pointer"
+        className="flex items-center gap-2.5 transition-opacity hover:opacity-75 cursor-pointer shrink-0"
+        aria-label="NEXUS, kembali ke beranda"
       >
         <CypherMark className="w-6 h-6 md:w-7 md:h-7" />
-        <span className="font-display text-[21px] md:text-[24px] font-black tracking-[.28em] pl-[.28em] bg-gradient-to-r from-blue-700 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+        <span className="font-display text-[19px] md:text-[21px] font-bold tracking-[.12em] text-hi">
           NEXUS
         </span>
       </button>
@@ -84,15 +82,15 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
           onClick={() => setOpen((v) => !v)}
           aria-label="Menu Navigasi"
           aria-expanded={open}
-          className="w-11 h-11 rounded-2xl flex items-center justify-center text-hi glass-soft hover:bg-black/[.06] active:scale-95 transition-all cursor-pointer"
+          className="w-11 h-11 rounded-2xl flex items-center justify-center text-hi bg-white/70 hover:bg-white active:scale-95 transition-all cursor-pointer"
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
         {open && (
-          <nav className="absolute right-0 top-[54px] w-[290px] rounded-3xl overflow-hidden glass-deep anim-pop shadow-2xl p-1.5 border border-white/60">
-            <div className="px-3.5 py-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo border-b border-black/[.06] mb-1">
-              Navigasi Platform NEXUS
+          <nav aria-label="Navigasi utama" className="absolute right-0 top-[55px] w-[min(320px,calc(100vw-32px))] rounded-3xl overflow-hidden surface-card anim-pop shadow-xl p-2">
+            <div className="px-3.5 py-2 eyebrow text-lo border-b border-black/[.06] mb-1">
+              Jelajahi NEXUS
             </div>
             {MENU.map((m) => {
               const active = m.id === view;
@@ -103,7 +101,7 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
                     setOpen(false);
                     onNavigate(m.id);
                   }}
-                  className={`w-full h-11 px-3.5 rounded-2xl flex items-center gap-2 text-left text-[13px] font-medium transition-all cursor-pointer ${
+                  className={`w-full min-h-11 px-3.5 rounded-2xl flex items-center gap-2 text-left text-[14px] font-medium transition-all cursor-pointer ${
                     active
                       ? 'text-core-600 bg-core-500/10 font-semibold shadow-[inset_0_0_0_1px_rgba(2,132,199,0.25)]'
                       : 'text-mid hover:bg-black/[.04] hover:text-hi'
@@ -111,7 +109,7 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
                 >
                   <span className="truncate">{m.label}</span>
                   {m.tag && (
-                    <span className="ml-auto text-[9.5px] font-mono px-1.5 py-0.5 rounded-md bg-black/[.05] text-lo">
+                    <span className="ml-auto text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-mid">
                       {m.tag}
                     </span>
                   )}
@@ -121,6 +119,7 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
             })}
           </nav>
         )}
+      </div>
       </div>
     </header>
   );

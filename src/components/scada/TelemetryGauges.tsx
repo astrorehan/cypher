@@ -27,7 +27,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
       {/* 4 Primary Top KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: TEG Power Output */}
-        <div className="p-5 rounded-3xl bg-white border border-black/[.08] shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+        <div className="p-5 rounded-3xl surface-card relative overflow-hidden group hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-lo">
               Daya Pemanenan TEG
@@ -61,7 +61,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
         </div>
 
         {/* Card 2: Thermal Gradient & Voltage */}
-        <div className="p-5 rounded-3xl bg-white border border-black/[.08] shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+        <div className="p-5 rounded-3xl surface-card relative overflow-hidden group hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-lo">
               Gradien Termal (ΔT)
@@ -94,7 +94,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
 
         {/* Card 3: CEMS CO & CO2 Concentration */}
         <div
-          className={`p-5 rounded-3xl bg-white border shadow-sm relative overflow-hidden transition-all ${
+          className={`p-5 rounded-3xl surface-card relative overflow-hidden transition-all ${
             !state.filter.active
               ? 'border-amber-300 bg-amber-50/30'
               : 'border-black/[.08] hover:shadow-md'
@@ -147,7 +147,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
         </div>
 
         {/* Card 4: O2 Stability & Gas Flow Integrity */}
-        <div className="p-5 rounded-3xl bg-white border border-black/[.08] shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+        <div className="p-5 rounded-3xl surface-card relative overflow-hidden group hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-lo">
               Kestabilan O₂ &amp; Aliran Gas
@@ -180,7 +180,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
       {/* Dual Detailed Telemetry Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left: TEG Thermoelectric Subsystem Details */}
-        <div className="p-6 rounded-3xl bg-white border border-black/[.08] shadow-sm">
+        <div className="p-6 rounded-3xl surface-card">
           <div className="flex items-center justify-between pb-3.5 border-b border-black/[.08] mb-4">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-cyan-500" />
@@ -220,7 +220,7 @@ export const TelemetryGauges: React.FC<Props> = ({ state }) => {
         </div>
 
         {/* Right: CEMS IoT Sensor Suite Details */}
-        <div className="p-6 rounded-3xl bg-white border border-black/[.08] shadow-sm">
+        <div className="p-6 rounded-3xl surface-card">
           <div className="flex items-center justify-between pb-3.5 border-b border-black/[.08] mb-4">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-emerald-500" />

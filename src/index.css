@@ -1,11 +1,6 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   SINERO — Industrial SCADA & Digital Twin Design System
-   Dual surfaces:
-   1. SCADA Instrumentation & Telemetry (Precision, Dark/Light Hybrid)
-   2. SINERO Quantum Glass (Frosted Glass on Glowing Plasma Aurora)
-   ========================================================================== */
+/* Shared typography and material system across the site and control room. */
 
 @theme {
   --color-ink-950: #ffffff;
@@ -54,11 +49,11 @@
   --color-mode-scaffold: #16a34a;
 
   /* Latar panggung */
-  --color-stage: #f7f9fd;
+  --color-stage: #f5f7fb;
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Inter", "JetBrains Mono", monospace;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 @layer base {
@@ -73,6 +68,7 @@
   body {
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01";
+    font-optical-sizing: auto;
     background: var(--color-stage);
     color: var(--color-hi);
     -webkit-font-smoothing: antialiased;
@@ -83,6 +79,23 @@
   ::selection {
     background: color-mix(in srgb, var(--color-core-500) 22%, transparent);
     color: var(--color-hi);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid rgba(2, 132, 199, 0.42);
+    outline-offset: 3px;
   }
 }
 
@@ -155,6 +168,182 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     inset 0 0 0 1px color-mix(in srgb, var(--tint, #0284c7) 30%, transparent);
+}
+
+/* Floating controls use glass; reading surfaces stay opaque. */
+.liquid-bar {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.88), rgba(247, 250, 255, 0.68));
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  box-shadow:
+    0 18px 42px -24px rgba(29, 53, 91, 0.32),
+    0 2px 10px rgba(30, 47, 80, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(148, 163, 184, 0.12);
+}
+
+.liquid-control {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.9), rgba(242, 247, 255, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow:
+    0 5px 16px -9px rgba(31, 50, 85, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 1px rgba(126, 147, 181, 0.12);
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.liquid-control:hover {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.98), rgba(234, 243, 255, 0.82));
+  box-shadow:
+    0 10px 22px -12px rgba(31, 50, 85, 0.33),
+    inset 0 1px 0 #fff,
+    inset 0 0 0 1px rgba(96, 133, 181, 0.18);
+}
+
+.liquid-control:active {
+  transform: scale(0.985);
+}
+
+.liquid-control:focus-visible,
+.liquid-range:focus-visible {
+  outline: 3px solid rgba(2, 132, 199, 0.45);
+  outline-offset: 3px;
+}
+
+.scada-panel {
+  background: #fff;
+  border: 1px solid rgba(41, 58, 89, 0.09);
+  box-shadow: 0 14px 34px -25px rgba(29, 53, 91, 0.28);
+}
+
+.surface-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(41, 58, 89, 0.09);
+  box-shadow: 0 16px 40px -30px rgba(29, 53, 91, 0.32), 0 1px 2px rgba(29, 53, 91, 0.04);
+}
+
+.surface-inset {
+  background: #f6f8fb;
+  border: 1px solid rgba(41, 58, 89, 0.07);
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 690;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.primary-action {
+  color: #fff;
+  background: linear-gradient(165deg, #138bca, #006caa);
+  box-shadow: 0 12px 24px -14px rgba(2, 102, 167, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.primary-action:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 16px 30px -13px rgba(2, 102, 167, 0.57), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.primary-action:active {
+  transform: scale(0.985);
+}
+
+.primary-action:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.liquid-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(
+    90deg,
+    var(--range-color, #0284c7) 0 var(--range-fill, 50%),
+    #dfe7f0 var(--range-fill, 50%) 100%
+  );
+  box-shadow: inset 0 1px 2px rgba(41, 58, 89, 0.12);
+}
+
+.liquid-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.98);
+  background: radial-gradient(circle at 48% 45%, var(--range-color, #0284c7) 0 35%, rgba(255, 255, 255, 0.94) 41% 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 5px 12px rgba(31, 50, 85, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(62, 83, 115, 0.1);
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.liquid-range:hover::-webkit-slider-thumb,
+.liquid-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 6px 14px rgba(31, 50, 85, 0.3), 0 0 0 5px color-mix(in srgb, var(--range-color, #0284c7) 14%, transparent);
+  transform: scale(1.05);
+}
+
+.liquid-range::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  background: radial-gradient(circle at 48% 45%, var(--range-color, #0284c7) 0 35%, rgba(255, 255, 255, 0.94) 41% 100%);
+  box-shadow: 0 4px 10px rgba(31, 50, 85, 0.25);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .liquid-bar,
+  .liquid-control {
+    background: #f9fbff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-control,
+  .primary-action,
+  .liquid-range::-webkit-slider-thumb {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  .liquid-bar,
+  .liquid-control {
+    background: #fff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: #a6b3c7;
+  }
 }
 
 .font-mono {

@@ -59,28 +59,28 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
   return (
     <div ref={menuRef} className={`relative flex items-center ${className}`}>
       {/* Main Sound Button Group */}
-      <div className="flex items-center rounded-xl p-0.5 bg-slate-900/60 sm:bg-white/80 border border-slate-700/50 sm:border-slate-200/80 shadow-xs transition-all backdrop-blur-md">
+      <div className="flex items-center rounded-xl p-0.5 bg-white/60">
         {/* Toggle Mute Button */}
         <button
           type="button"
           onClick={() => toggleMute()}
           title={isMuted ? 'Aktifkan Efek Suara' : 'Bisukan Efek Suara'}
-          aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
-          className={`h-8 px-2.5 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer select-none text-[12px] font-medium ${
+          aria-label={isMuted ? 'Aktifkan suara' : 'Bisukan suara'}
+          className={`h-9 px-2.5 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer select-none text-[12px] font-medium ${
             isMuted
-              ? 'text-slate-400 hover:text-slate-200 hover:bg-white/10'
-              : 'text-cyan-400 sm:text-cyan-700 font-semibold bg-cyan-500/10 sm:bg-cyan-50 hover:bg-cyan-500/20 sm:hover:bg-cyan-100 shadow-xs'
+              ? 'text-mid hover:text-hi hover:bg-white'
+              : 'text-cyan-700 font-semibold bg-cyan-50 hover:bg-cyan-100'
           }`}
         >
           {isMuted ? (
             <VolumeX className="w-3.5 h-3.5 text-slate-400" />
           ) : volume < 0.4 ? (
-            <Volume1 className="w-3.5 h-3.5 text-cyan-400 sm:text-cyan-600 animate-pulse" />
+            <Volume1 className="w-3.5 h-3.5 text-cyan-600" />
           ) : (
-            <Volume2 className="w-3.5 h-3.5 text-cyan-400 sm:text-cyan-600" />
+            <Volume2 className="w-3.5 h-3.5 text-cyan-600" />
           )}
           <span className="hidden sm:inline text-[11px] tracking-tight">
-            {isMuted ? 'Muted' : 'Audio On'}
+            {isMuted ? 'Suara mati' : 'Suara aktif'}
           </span>
         </button>
 
@@ -89,15 +89,15 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           title="Pilih Tema & Pengaturan Suara UI"
-          aria-label="Sound Settings Menu"
+          aria-label="Pengaturan suara"
           aria-expanded={isOpen}
-          className={`h-8 w-7 rounded-lg flex items-center justify-center transition-all cursor-pointer text-slate-300 sm:text-slate-600 hover:text-white sm:hover:text-slate-900 hover:bg-white/10 sm:hover:bg-slate-100 ${
-            isOpen ? 'bg-white/15 sm:bg-slate-200 text-white sm:text-slate-900' : ''
+          className={`h-9 w-8 rounded-lg flex items-center justify-center transition-all cursor-pointer text-mid hover:text-hi hover:bg-white ${
+            isOpen ? 'bg-white text-hi' : ''
           }`}
         >
           <ChevronDown
             className={`w-3.5 h-3.5 transition-transform duration-200 ${
-              isOpen ? 'rotate-180 text-cyan-400 sm:text-cyan-600' : 'text-slate-400'
+              isOpen ? 'rotate-180 text-cyan-600' : 'text-slate-400'
             }`}
           />
         </button>
@@ -105,7 +105,7 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
 
       {/* Floating Sound Settings Popover */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-[300px] sm:w-[330px] rounded-2xl bg-white/95 p-3.5 border border-slate-200/90 shadow-2xl z-50 anim-pop backdrop-blur-xl text-slate-800">
+        <div className="absolute right-0 top-full mt-2 w-[min(330px,calc(100vw-32px))] rounded-2xl surface-card p-3.5 shadow-xl z-50 anim-pop text-slate-800">
           {/* Header */}
           <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
             <div className="flex items-center gap-2">
@@ -114,7 +114,7 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
               </div>
               <div>
                 <h4 className="text-[13px] font-bold text-slate-900 leading-tight">Profil Audio Haptik</h4>
-                <span className="text-[10.5px] text-slate-500">Kustomisasi efek hover & click UI</span>
+                <span className="text-[11px] text-slate-500">Atur suara antarmuka</span>
               </div>
             </div>
             <button

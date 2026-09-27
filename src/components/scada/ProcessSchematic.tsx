@@ -31,7 +31,7 @@ export const ProcessSchematic: React.FC<Props> = ({
   const { playClick, playBackwash, playAlarm } = useSound();
 
   return (
-    <div className="rounded-3xl bg-white border border-black/[.08] text-hi p-5 md:p-6 shadow-sm relative overflow-hidden">
+    <div className="rounded-3xl surface-card text-hi p-5 md:p-6 relative overflow-hidden">
       {/* Decorative subtle ambient glows */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
         <div className="absolute top-0 left-1/4 w-80 h-80 bg-cyan-500/10 rounded-full filter blur-[80px]" />
