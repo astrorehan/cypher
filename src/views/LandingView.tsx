@@ -20,7 +20,7 @@ export const LandingView: React.FC<Props> = ({ onNavigate }) => (
         Riset Universitas Gadjah Mada · 2026
       </div>
 
-      <h1 className="page-title mt-8 text-[clamp(2.7rem,6vw,5.2rem)] text-hi">
+      <h1 className="page-title mt-8 text-[clamp(1.45rem,calc(6vw-20px),3.95rem)] text-hi">
         Satu ruang kendali untuk
         <span className="block text-core-600">emisi smelter yang lebih jelas.</span>
       </h1>
@@ -51,7 +51,7 @@ export const LandingView: React.FC<Props> = ({ onNavigate }) => (
       </div>
     </div>
 
-    <div className="mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 w-full anim-rise delay-2">
+    <div className="mt-8 md:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 w-full anim-rise delay-2">
       {highlights.map(({ icon: Icon, label, value, detail }) => (
         <div key={label} className="surface-card rounded-[24px] p-5 text-left">
           <div className="w-10 h-10 rounded-2xl surface-inset flex items-center justify-center text-core-600 mb-5"><Icon className="w-5 h-5" /></div>
