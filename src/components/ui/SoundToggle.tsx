@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import {
   Volume2,
   VolumeX,
@@ -37,6 +37,9 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const settingsId = useId();
+  const volumeId = useId();
 
   // Close on outside click
   useEffect(() => {
@@ -57,7 +60,20 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
   const ActiveIconComponent = activeIcon;
 
   return (
-    <div ref={menuRef} className={`relative flex items-center ${className}`}>
+    <div
+      ref={menuRef}
+      className={`relative flex items-center ${className}`}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && isOpen) {
+          event.stopPropagation();
+          setIsOpen(false);
+          triggerRef.current?.focus();
+        }
+      }}
+    >
       {/* Main Sound Button Group */}
       <div className="flex items-center rounded-xl p-0.5 bg-white/60">
         {/* Toggle Mute Button */}
@@ -86,11 +102,13 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
 
         {/* Preset Switcher Trigger */}
         <button
+          ref={triggerRef}
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           title="Pilih Tema & Pengaturan Suara UI"
           aria-label="Pengaturan suara"
           aria-expanded={isOpen}
+          aria-controls={settingsId}
           className={`h-9 w-8 rounded-lg flex items-center justify-center transition-all cursor-pointer text-mid hover:text-hi hover:bg-white ${
             isOpen ? 'bg-white text-hi' : ''
           }`}
@@ -105,15 +123,15 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
 
       {/* Floating Sound Settings Popover */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-[min(330px,calc(100vw-32px))] rounded-2xl surface-card p-3.5 shadow-xl z-50 anim-pop text-slate-800">
+        <div id={settingsId} role="region" aria-label="Pengaturan suara" className="dropdown-panel absolute -right-[52px] top-full mt-4 w-[min(350px,calc(100vw-80px))] rounded-[26px] p-4 z-50 text-slate-800">
           {/* Header */}
           <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 rounded-2xl bg-core-500/10 text-core-600 flex items-center justify-center">
                 <ActiveIconComponent className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-[13px] font-bold text-slate-900 leading-tight">Profil Audio Haptik</h4>
+                <h4 className="text-[13px] font-semibold text-hi leading-tight">Pengaturan suara</h4>
                 <span className="text-[11px] text-slate-500">Atur suara antarmuka</span>
               </div>
             </div>
@@ -128,22 +146,23 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
                   : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
               }`}
             >
-              {isMuted ? 'Muted' : 'Aktif'}
+              {isMuted ? 'Mati' : 'Aktif'}
             </button>
           </div>
 
           {/* Volume Slider */}
           <div className="mb-3 px-2.5 py-2 rounded-xl bg-slate-50 border border-slate-100">
             <div className="flex items-center justify-between text-[11px] text-slate-600 mb-1.5">
-              <span className="flex items-center gap-1.5 font-medium">
+              <label htmlFor={volumeId} className="flex items-center gap-1.5 font-medium">
                 <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
-                Master Volume
-              </span>
+                Volume suara
+              </label>
               <span className="font-mono text-[11px] font-bold text-slate-800">
                 {isMuted ? '0%' : `${Math.round(volume * 100)}%`}
               </span>
             </div>
             <input
+              id={volumeId}
               type="range"
               min="0.1"
               max="1.0"
@@ -171,16 +190,19 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
               return (
                 <div
                   key={p.id}
-                  onClick={() => {
-                    setPreset(p.id);
-                  }}
-                  className={`w-full p-2.5 rounded-xl flex items-start gap-2.5 transition-all text-left cursor-pointer border ${
+                  className={`w-full rounded-2xl flex items-center transition-all text-left border ${
                     isActive
                       ? 'bg-cyan-50/90 border-cyan-400/70 shadow-xs ring-1 ring-cyan-500/20'
                       : 'bg-white hover:bg-slate-50/90 border-slate-100 hover:border-slate-200'
                   }`}
                 >
-                  <div
+                  <button
+                    type="button"
+                    onClick={() => setPreset(p.id)}
+                    aria-pressed={isActive}
+                    className="flex-1 min-w-0 p-3 flex items-center gap-2.5 text-left cursor-pointer rounded-xl"
+                  >
+                  <span
                     className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center mt-0.5 ${
                       isActive
                         ? 'bg-cyan-600 text-white shadow-xs'
@@ -188,10 +210,10 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
                     }`}
                   >
                     <IconComp className="w-3.5 h-3.5" />
-                  </div>
+                  </span>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 justify-between">
+                  <span className="flex-1 min-w-0">
+                    <span className="flex items-center gap-1.5 justify-between">
                       <span
                         className={`text-[12px] font-bold truncate ${
                           isActive ? 'text-cyan-900' : 'text-slate-800'
@@ -208,11 +230,12 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
                       >
                         {p.badge}
                       </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 line-clamp-1 leading-snug">
+                    </span>
+                    <span className="block text-[11px] text-slate-500 line-clamp-1 leading-snug">
                       {p.tagline}
-                    </p>
-                  </div>
+                    </span>
+                  </span>
+                  </button>
 
                   {/* Play preview button */}
                   <button
@@ -222,7 +245,8 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
                       playClick(p.id);
                     }}
                     title={`Uji Coba Suara ${p.name}`}
-                    className="p-1.5 rounded-lg hover:bg-slate-200/80 text-slate-400 hover:text-slate-800 shrink-0 transition-all cursor-pointer mt-0.5"
+                    aria-label={`Uji coba suara ${p.name}`}
+                    className="p-2 mr-2 rounded-xl hover:bg-slate-200/80 text-slate-400 hover:text-slate-800 shrink-0 transition-all cursor-pointer"
                   >
                     {isActive ? (
                       <Check className="w-3.5 h-3.5 text-cyan-600 font-bold" />
@@ -236,11 +260,9 @@ export const SoundToggle: React.FC<{ className?: string }> = ({ className = '' }
           </div>
 
           {/* Quick tip footer */}
-          <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-500 flex items-center justify-between">
-            <span>Hover / klik tombol untuk mendengar efek</span>
-            <span className="font-mono text-[9px] text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded font-semibold">
-              Web Audio API
-            </span>
+          <div className="mt-3 pt-3 border-t border-slate-200/70 text-[10px] text-lo flex items-center gap-2">
+            <Play className="w-3 h-3 shrink-0" />
+            <span>Coba suara sebelum memilih tema favorit Anda.</span>
           </div>
         </div>
       )}

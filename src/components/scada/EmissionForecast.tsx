@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, Info, TrendingUp } from 'lucide-react';
 import { ScadaSystemState } from '../../engine/cypherTypes';
+import { Dropdown } from '../ui/Dropdown';
 
 interface Props {
   state: ScadaSystemState;
@@ -14,6 +15,13 @@ const METRICS: { key: Metric; label: string; unit: string; digits: number }[] = 
   { key: 'so2', label: 'SO₂', unit: 'mg/Nm³', digits: 1 },
   { key: 'pm25', label: 'PM2.5', unit: 'µg/m³', digits: 1 },
 ];
+
+const METRIC_OPTIONS = METRICS.map(item => ({
+  value: item.key,
+  label: item.label,
+  description: item.unit,
+  icon: Activity,
+}));
 
 const HOURS = [0, 6, 12, 18, 24, 30, 36, 42, 48];
 
@@ -48,16 +56,16 @@ export const EmissionForecast: React.FC<Props> = ({ state }) => {
               </div>
               <h4 className="section-title text-[19px] text-hi mt-1">Konsentrasi {selected.label}</h4>
             </div>
-            <label className="text-[12px] font-semibold text-mid">
-              Parameter
-              <select
-                value={metric}
-                onChange={(event) => setMetric(event.target.value as Metric)}
-                className="ml-2 rounded-xl liquid-control px-3 py-2 text-hi cursor-pointer"
-              >
-                {METRICS.map((item) => <option key={item.key} value={item.key}>{item.label}</option>)}
-              </select>
-            </label>
+            <Dropdown<Metric>
+              id="emission-parameter"
+              label="Parameter"
+              value={metric}
+              onChange={setMetric}
+              options={METRIC_OPTIONS}
+              minMenuWidth={180}
+              showSelectedIcon={false}
+              className="w-28"
+            />
           </div>
 
           <div className="w-full overflow-x-auto" role="img" aria-label={`Grafik skenario ${selected.label} dari saat ini hingga 48 jam`}>

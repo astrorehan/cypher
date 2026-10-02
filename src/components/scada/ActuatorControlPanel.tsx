@@ -4,13 +4,16 @@ import {
   AlertTriangle,
   CheckCircle2,
   Flame,
+  ListFilter,
   RefreshCw,
   SlidersHorizontal,
   Trash2,
+  UserRound,
   Wind,
   Zap,
 } from 'lucide-react';
 import { ScadaSystemState, ScadaEventLog } from '../../engine/cypherTypes';
+import { Dropdown } from '../ui/Dropdown';
 
 type PresetId = 'MAX_POWER' | 'ECO_COMPLIANCE' | 'LAB_BENCHMARK' | 'SURGE_PROTECT';
 type LogFilter = 'ALL' | 'TEG' | 'CEMS' | 'FILTER' | 'AI' | 'OPERATOR';
@@ -34,6 +37,15 @@ const PRESETS = [
   { id: 'ECO_COMPLIANCE', label: 'Emisi rendah', icon: Wind },
   { id: 'LAB_BENCHMARK', label: 'Uji lab', icon: Activity },
   { id: 'SURGE_PROTECT', label: 'Redam panas', icon: Flame },
+] as const;
+
+const LOG_FILTER_OPTIONS = [
+  { value: 'ALL', label: 'Semua aktivitas', icon: ListFilter },
+  { value: 'TEG', label: 'TEG', icon: Zap },
+  { value: 'CEMS', label: 'CEMS', icon: Activity },
+  { value: 'FILTER', label: 'Filter', icon: Wind },
+  { value: 'AI', label: 'Kendali', icon: SlidersHorizontal },
+  { value: 'OPERATOR', label: 'Operator', icon: UserRound },
 ] as const;
 
 const SOURCE_NAMES: Record<ScadaEventLog['source'], string> = {
@@ -213,20 +225,14 @@ export const ActuatorControlPanel: React.FC<Props> = ({
             )}
           </div>
 
-          <label className="text-[12px] font-semibold text-mid mb-2" htmlFor="session-log-filter">Tampilkan catatan</label>
-          <select
+          <Dropdown<LogFilter>
             id="session-log-filter"
+            label="Tampilkan catatan"
             value={logFilter}
-            onChange={(event) => setLogFilter(event.target.value as LogFilter)}
-            className="liquid-control h-11 rounded-xl px-3 text-[13px] font-semibold text-hi cursor-pointer mb-4"
-          >
-            <option value="ALL">Semua aktivitas</option>
-            <option value="TEG">TEG</option>
-            <option value="CEMS">CEMS</option>
-            <option value="FILTER">Filter</option>
-            <option value="AI">Kendali</option>
-            <option value="OPERATOR">Operator</option>
-          </select>
+            onChange={setLogFilter}
+            options={LOG_FILTER_OPTIONS}
+            className="mb-4"
+          />
 
           <div className="space-y-2 max-h-[440px] overflow-y-auto pr-1 scroll-paper flex-1">
             {filteredLogs.length === 0 ? (

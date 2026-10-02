@@ -1,9 +1,23 @@
 import React from 'react';
-import { Download, Home } from 'lucide-react';
+import { Cpu, Download, Factory, FlaskConical, Hand, Home } from 'lucide-react';
 import { CypherMark } from '../brand/CypherMark';
 import { SmelterUnitId, ControlMode, ScadaSystemState } from '../../engine/cypherTypes';
 import { SMELTER_UNITS } from '../../engine/cypherData';
 import { useSound } from '../../utils/SoundProvider';
+import { Dropdown } from '../ui/Dropdown';
+
+const UNIT_OPTIONS = SMELTER_UNITS.map(unit => ({
+  value: unit.id,
+  label: unit.name,
+  description: unit.location,
+  icon: unit.isLabPrototype ? FlaskConical : Factory,
+}));
+
+const CONTROL_MODE_OPTIONS = [
+  { value: 'AUTO_CLOSED_LOOP', label: 'Otomatis', icon: Cpu },
+  { value: 'MANUAL_OVERRIDE', label: 'Manual', icon: Hand },
+  { value: 'EXPERIMENTAL_BENCH', label: 'Uji lab', icon: FlaskConical },
+] as const;
 
 interface Props {
   state: ScadaSystemState;
@@ -45,29 +59,25 @@ export const ScadaHeader: React.FC<Props> = ({
         </div>
 
         <div className="grid grid-cols-2 xl:grid-cols-[minmax(240px,280px)_minmax(130px,1fr)_auto] items-end gap-3 w-full xl:w-auto">
-          <label className="col-span-2 xl:col-span-1 flex flex-col gap-1 text-[12px] font-medium text-mid min-w-0">
-            Unit dipantau
-            <select
-              value={state.unitId}
-              onChange={(event) => { playClick(); onSelectUnit(event.target.value as SmelterUnitId); }}
-              className="liquid-control w-full h-11 rounded-xl px-3 text-[13px] font-semibold text-hi cursor-pointer"
-            >
-              {SMELTER_UNITS.map((unit) => <option key={unit.id} value={unit.id}>{unit.name}</option>)}
-            </select>
-          </label>
+          <Dropdown<SmelterUnitId>
+            id="monitored-unit"
+            label="Unit dipantau"
+            value={state.unitId}
+            onChange={(id) => { playClick(); onSelectUnit(id); }}
+            options={UNIT_OPTIONS}
+            minMenuWidth={360}
+            className="col-span-2 xl:col-span-1"
+          />
 
-          <label className="flex flex-col gap-1 text-[12px] font-medium text-mid min-w-0">
-            Mode kendali
-            <select
-              value={state.controlMode}
-              onChange={(event) => { playClick(); onSetControlMode(event.target.value as ControlMode); }}
-              className="liquid-control w-full h-11 rounded-xl px-3 text-[13px] font-semibold text-hi cursor-pointer"
-            >
-              <option value="AUTO_CLOSED_LOOP">Otomatis</option>
-              <option value="MANUAL_OVERRIDE">Manual</option>
-              <option value="EXPERIMENTAL_BENCH">Uji lab</option>
-            </select>
-          </label>
+          <Dropdown<ControlMode>
+            id="control-mode"
+            label="Mode kendali"
+            value={state.controlMode}
+            onChange={(mode) => { playClick(); onSetControlMode(mode); }}
+            options={CONTROL_MODE_OPTIONS}
+            minMenuWidth={180}
+            showSelectedIcon={false}
+          />
 
           {onExportReport && (
             <button

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Menu, X, Check } from 'lucide-react';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { Menu, X, Check, ArrowUpRight, Home, SlidersHorizontal, Map, BookOpen, UserRound, UsersRound, type LucideIcon } from 'lucide-react';
 import { SiteView } from '../../engine/cypherTypes';
 import { SoundToggle } from '../ui/SoundToggle';
 import { CypherMark } from '../brand/CypherMark';
@@ -9,32 +9,29 @@ interface Props {
   onNavigate: (view: SiteView) => void;
 }
 
-const MENU: { id: SiteView; label: string; tag?: string }[] = [
-  { id: 'landing', label: 'Beranda' },
-  { id: 'simulasi', label: 'Ruang kendali', tag: 'Simulasi' },
-  { id: 'nasional', label: 'Peta emisi nasional', tag: 'Peta' },
-  { id: 'metodologi', label: 'Metodologi' },
-  { id: 'profil', label: 'Profil operator' },
-  { id: 'tentang', label: 'Tentang tim' },
+const MENU: { id: SiteView; label: string; description: string; icon: LucideIcon; tag?: string }[] = [
+  { id: 'landing', label: 'Beranda', description: 'Kenali ekosistem NEXUS', icon: Home },
+  { id: 'simulasi', label: 'Ruang kendali', description: 'Pantau dan simulasikan emisi', icon: SlidersHorizontal, tag: 'Simulasi' },
+  { id: 'nasional', label: 'Peta emisi nasional', description: 'Jelajahi sebaran unit smelter', icon: Map },
+  { id: 'metodologi', label: 'Metodologi', description: 'Dasar riset dan pendekatan', icon: BookOpen },
+  { id: 'profil', label: 'Profil operator', description: 'Informasi dan profil operator', icon: UserRound },
+  { id: 'tentang', label: 'Tentang tim', description: 'Tim di balik NEXUS', icon: UsersRound },
 ];
 
 export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
 
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
       if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
     document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
     };
   }, [open]);
 
@@ -75,50 +72,81 @@ export const SiteHeader: React.FC<Props> = ({ view, onNavigate }) => {
       </button>
 
       {/* Kanan — Sound Toggle & Menu */}
-      <div ref={wrapRef} className="flex items-center gap-2 relative">
+      <div className="flex items-center gap-2">
         <SoundToggle />
 
+        <div
+          ref={wrapRef}
+          className="relative"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape' && open) {
+              event.stopPropagation();
+              setOpen(false);
+              triggerRef.current?.focus();
+            }
+          }}
+        >
         <button
+          ref={triggerRef}
+          type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label="Menu Navigasi"
           aria-expanded={open}
-          className="w-11 h-11 rounded-2xl flex items-center justify-center text-hi bg-white/70 hover:bg-white active:scale-95 transition-all cursor-pointer"
+          aria-controls={menuId}
+          className={`navigation-trigger liquid-control w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer ${open ? 'is-open' : 'text-mid'}`}
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
         {open && (
-          <nav aria-label="Navigasi utama" className="absolute right-0 top-[55px] w-[min(320px,calc(100vw-32px))] rounded-3xl overflow-hidden surface-card anim-pop shadow-xl p-2">
-            <div className="px-3.5 py-2 eyebrow text-lo border-b border-black/[.06] mb-1">
-              Jelajahi NEXUS
+          <nav id={menuId} aria-label="Navigasi utama" className="dropdown-panel absolute right-0 top-[calc(100%+12px)] w-[min(360px,calc(100vw-80px))] rounded-[26px] p-2.5">
+            <div className="flex items-center gap-3 px-3 py-3.5 mb-2 border-b border-slate-200/70">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-core-500/10 text-core-600"><CypherMark className="w-5 h-5" /></span>
+              <div>
+                <div className="text-[13px] font-semibold tracking-tight text-hi">Jelajahi NEXUS</div>
+                <p className="mt-0.5 text-[11px] text-lo">Riset, pemantauan, dan simulasi emisi</p>
+              </div>
             </div>
+            <div className="space-y-1">
             {MENU.map((m) => {
               const active = m.id === view;
+              const Icon = m.icon;
               return (
                 <button
                   key={m.id}
+                  type="button"
+                  aria-current={active ? 'page' : undefined}
                   onClick={() => {
                     setOpen(false);
                     onNavigate(m.id);
                   }}
-                  className={`w-full min-h-11 px-3.5 rounded-2xl flex items-center gap-2 text-left text-[14px] font-medium transition-all cursor-pointer ${
-                    active
-                      ? 'text-core-600 bg-core-500/10 font-semibold shadow-[inset_0_0_0_1px_rgba(2,132,199,0.25)]'
-                      : 'text-mid hover:bg-black/[.04] hover:text-hi'
-                  }`}
+                  className={`navigation-item group w-full min-h-[62px] px-3 py-2.5 rounded-2xl flex items-center gap-3 text-left cursor-pointer ${active ? 'is-active' : ''}`}
                 >
-                  <span className="truncate">{m.label}</span>
-                  {m.tag && (
-                    <span className="ml-auto text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-mid">
-                      {m.tag}
+                  <span className="navigation-icon flex w-9 h-9 items-center justify-center rounded-xl shrink-0"><Icon className="w-[17px] h-[17px]" strokeWidth={1.8} /></span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
+                      <span className="truncate">{m.label}</span>
+                      {m.tag && <span className="rounded-full bg-white/85 border border-slate-200/70 px-1.5 py-0.5 text-[9px] font-medium text-lo">{m.tag}</span>}
                     </span>
-                  )}
-                  {active && <Check className="w-4 h-4 ml-1 text-core-500 shrink-0" />}
+                    <span className="block mt-0.5 text-[11px] font-normal text-lo">{m.description}</span>
+                  </span>
+                  {active
+                    ? <span className="w-5 h-5 rounded-full bg-core-500 text-white flex items-center justify-center shrink-0"><Check className="w-3 h-3" strokeWidth={2.5} /></span>
+                    : <ArrowUpRight className="navigation-arrow w-4 h-4 shrink-0" />}
                 </button>
               );
             })}
+            </div>
+            <div className="mt-2 px-3 py-2.5 border-t border-slate-200/70 flex items-center gap-2 text-[10px] text-lo">
+              <span className="w-1.5 h-1.5 rounded-full bg-core-500" />
+              NEXUS · Riset emisi smelter UGM
+            </div>
           </nav>
         )}
+        </div>
       </div>
       </div>
     </header>
